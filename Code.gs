@@ -205,7 +205,7 @@ function sendApprovalLineMessagingApi(requestId, fullname, department, objective
   UrlFetchApp.fetch('https://api.line.me/v2/bot/message/push', {
     'method': 'post',
     'headers': { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + LINE_CHANNEL_TOKEN },
-    'payload': JSON.stringify({ 'to': LINE_TARGET_ID, 'messages': [flexMessageJson] }),
+    'payload': JSON.stringify(payload),
     'muteHttpExceptions': true
   });
 }
