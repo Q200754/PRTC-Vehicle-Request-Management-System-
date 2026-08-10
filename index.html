@@ -96,14 +96,14 @@
 <div class="container py-2">
   <div class="form-container">
     
-    <!-- Navigation Buttons -->
+    <!-- Dynamic Navigation Buttons -->
     <div class="d-flex justify-content-end gap-2 nav-btn-group mb-3">
-      <a href="?p=driver" target="_self" class="btn btn-outline-success btn-sm">
+      <button onclick="navigateTo('driver')" class="btn btn-outline-success btn-sm">
         <i class="bi bi-speedometer2 me-1"></i> สำหรับคนขับ
-      </a>
-      <a href="?p=admin" target="_self" class="btn btn-outline-secondary btn-sm">
+      </button>
+      <button onclick="navigateTo('admin')" class="btn btn-outline-secondary btn-sm">
         <i class="bi bi-shield-lock-fill me-1"></i> ระบบแอดมิน
-      </a>
+      </button>
     </div>
 
     <!-- Header Title -->
@@ -262,6 +262,16 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
   const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwszE9zY8keM6n0YL-yXRKpfurNfxwxPGClM98Y7C8xiIQQQXppF605e54l2XEUDYLq/exec";
+
+  // 🔄 Dynamic Navigation System
+  function navigateTo(page) {
+    const baseUrl = window.location.href.split('?')[0];
+    if (page === 'home') {
+      window.top.location.href = baseUrl;
+    } else {
+      window.top.location.href = baseUrl + '?p=' + page;
+    }
+  }
 
   function calculateDays() {
     const start = document.getElementById('startDate').value;
