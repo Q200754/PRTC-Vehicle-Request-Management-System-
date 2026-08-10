@@ -12,14 +12,14 @@ const LINE_TARGET_ID = 'U56af96f6772c80456d03df04fc84d3bf';
 function getTargetSheet() {
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
   if (!ss) throw new Error("ไม่สามารถเปิดไฟล์ Google Sheet ด้วย ID ที่ระบุได้");
-  
   const sheet = ss.getSheetByName(SHEET_NAME);
   if (!sheet) throw new Error(`ไม่พบ Tab ชีตที่ชื่อ '${SHEET_NAME}' ในไฟล์ Google Sheets`);
-  
   return sheet;
 }
 
+// 1. ฟังก์ชัน doGet สำหรับแสดงหน้าเว็บและส่งข้อมูลผ่าน API
 function doGet(e) {
+  // รองรับการดึงข้อมูลตารางผ่าน fetch (สำหรับ Vercel / Client)
   if (e && e.parameter && e.parameter.action === 'getRequests') {
     const data = getRequests();
     return ContentService
@@ -27,21 +27,9 @@ function doGet(e) {
       .setMimeType(ContentService.MimeType.JSON);
   }
 
-  const page = e && e.parameter.p ? e.parameter.p.toLowerCase() : 'form';
-  let htmlName = 'Form';
-  if (page === 'admin') htmlName = 'Admin';
-  else if (page === 'driver') htmlName = 'Driver';
-
-  return HtmlService.createTemplateFromFile(htmlName)
-    .evaluate()
-    .setTitle('PRTC-VRMS | ' + htmlName)
-    .addMetaTag('viewport', 'width=device-width, initial-scale=1')
-    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
-}
-
-  // การเปิดหน้าเว็บปกติบน Google Apps Script
-  const page = e && e.parameter.p ? e.parameter.p.toLowerCase() : 'form';
-  let htmlName = 'Form';
+  // รองรับการเปิดหน้าปกติใน Apps Script
+  const page = e && e.parameter.p ? e.parameter.p.toLowerCase() : 'index';
+  let htmlName = 'index';
   
   if (page === 'admin') htmlName = 'Admin';
   else if (page === 'driver') htmlName = 'Driver';
@@ -53,7 +41,7 @@ function doGet(e) {
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 
-// 1. บันทึกคำร้องขอใช้รถใหม่
+// 2. บันทึกคำร้องขอใช้รถใหม่
 function submitRequest(data) {
   try {
     const sheet = getTargetSheet();
@@ -78,7 +66,7 @@ function submitRequest(data) {
   }
 }
 
-// 2. ดึงรายการคำร้องทั้งหมด
+// 3. ดึงรายการคำร้องทั้งหมด
 function getRequests() {
   try {
     const sheet = getTargetSheet();
@@ -124,7 +112,7 @@ function getRequests() {
   }
 }
 
-// 3. อัปเดตสถานะอนุมัติ/ไม่อนุมัติ
+// 4. อัปเดตสถานะอนุมัติ/ไม่อนุมัติ
 function updateAdminApproval(rowIndex, status, driverName, adminName) {
   try {
     const sheet = getTargetSheet();
@@ -152,7 +140,7 @@ function updateAdminApproval(rowIndex, status, driverName, adminName) {
   }
 }
 
-// 4. แก้ไขข้อมูลคำร้อง
+// 5. แก้ไขข้อมูลคำร้อง
 function updateRequestDetail(data) {
   try {
     const sheet = getTargetSheet();
@@ -177,7 +165,7 @@ function updateRequestDetail(data) {
   }
 }
 
-// 5. ส่งแจ้งเตือน LINE Flex Card
+// 6. ส่งแจ้งเตือน LINE Flex Card
 function sendApprovalLineMessagingApi(requestId, fullname, department, objective, vehicleType, startDate, startTime, driverName, status, adminName) {
   if (!LINE_CHANNEL_TOKEN || !LINE_TARGET_ID) return;
 
@@ -225,12 +213,12 @@ function sendApprovalLineMessagingApi(requestId, fullname, department, objective
   UrlFetchApp.fetch('https://api.line.me/v2/bot/message/push', {
     'method': 'post',
     'headers': { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + LINE_CHANNEL_TOKEN },
-    'payload': JSON.stringify(payload),
+    'payload': JSON.stringify(flexMessageJson),
     'muteHttpExceptions': true
   });
 }
 
-// 6. บันทึกงานคนขับ
+// 7. บันทึกงานคนขับ
 function updateDriverLog(data) {
   try {
     const sheet = getTargetSheet();
@@ -252,7 +240,7 @@ function updateDriverLog(data) {
   }
 }
 
-// 7. ลบคำร้อง
+// 8. ลบคำร้อง
 function deleteRequest(rowIndex) {
   try {
     const sheet = getTargetSheet();
@@ -265,7 +253,7 @@ function deleteRequest(rowIndex) {
   }
 }
 
-// 8. รองรับ HTTP POST จาก Vercel
+// 9. รองรับ HTTP POST จาก Vercel
 function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
