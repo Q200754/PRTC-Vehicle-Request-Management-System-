@@ -3,171 +3,241 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PRTC-VRMS | บันทึกงานขับรถ</title>
+  <title>ระบบสำหรับคนขับ | PRTC-VRMS</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <style>
-    body { font-family: 'Sarabun', sans-serif; background-color: #f8fafc; }
-    .card-custom { border: none; border-top: 5px solid #16a34a; border-radius: 14px; }
+    body { font-family: 'Sarabun', sans-serif; background-color: #f8fafc; color: #334155; }
+    .table-card { border: none; border-radius: 14px; background: #ffffff; }
   </style>
 </head>
 <body>
 
-<div class="container py-4">
-  <div class="row justify-content-center">
-    <div class="col-lg-8">
-      
-      <!-- Navigation Buttons -->
-      <div class="mb-3 d-flex gap-2">
-        <button onclick="navigateTo('home')" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
-          <i class="bi bi-arrow-left me-1"></i> ย้อนกลับหน้าหลัก
-        </button>
-        <button onclick="navigateTo('admin')" class="btn btn-outline-primary btn-sm rounded-pill px-3">
-          <i class="bi bi-shield-lock-fill me-1"></i> ระบบแอดมิน
-        </button>
-      </div>
-
-      <div class="card card-custom p-4 bg-white shadow-sm">
-        <h4 class="text-success mb-3 fw-bold"><i class="bi bi-speedometer2 me-2"></i>บันทึกระยะทางและค่าน้ำมัน (คนขับ)</h4>
+  <div class="container py-4">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
         
-        <div class="mb-3">
-          <label class="form-label fw-bold">เลือกรายการงานที่อนุมัติแล้ว</label>
-          <select class="form-select" id="requestSelect" onchange="onSelectRequest()">
-            <option value="" selected disabled>-- กำลังโหลดรายการ... --</option>
-          </select>
+        <!-- Navigation Header -->
+        <div class="mb-3 d-flex justify-content-between align-items-center">
+          <button type="button" onclick="window.location.href='<?= ScriptApp.getService().getUrl() ?>'" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+            <i class="bi bi-arrow-left me-1"></i> ย้อนกลับหน้าหลัก
+          </button>
+          <button type="button" onclick="window.location.href='<?= ScriptApp.getService().getUrl() ?>?p=admin'" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+            <i class="bi bi-shield-lock-fill me-1"></i> ระบบแอดมิน
+          </button>
+        </div>
+        
+        <!-- Header Card -->
+        <div class="card p-4 bg-white shadow-sm border-0 border-top border-success border-4 rounded-3 mb-4">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h4 class="text-success mb-1 fw-bold"><i class="bi bi-speedometer2 me-2"></i>บันทึกระยะทางและค่าน้ำมัน (คนขับ)</h4>
+              <p class="text-muted m-0 small">เลือกรายการคำร้องที่ได้รับการอนุมัติเพื่อบันทึกระยะทางและค่าน้ำมัน</p>
+            </div>
+            <button class="btn btn-outline-success btn-sm px-3" onclick="loadDriverData()"><i class="bi bi-arrow-clockwise me-1"></i> รีเฟรช</button>
+          </div>
         </div>
 
-        <form id="driverForm" style="display:none;">
-          <input type="hidden" id="rowIndex">
-          
-          <div class="p-3 bg-light rounded-3 mb-3 border">
-            <div><strong>งาน:</strong> <span id="infoObjective"></span></div>
-            <div><strong>ผู้ขอใช้รถ:</strong> <span id="infoUser"></span></div>
-            <div><strong>รถ:</strong> <span id="infoVehicle"></span></div>
+        <!-- Table Card -->
+        <div class="card table-card overflow-hidden shadow-sm mb-4">
+          <div class="card-header bg-light fw-bold text-dark"><i class="bi bi-card-checklist me-2"></i>รายการคำร้องที่อนุมัติแล้ว (รอลงไมล์)</div>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th class="ps-3">Request ID</th>
+                  <th>ผู้ขอใช้รถ</th>
+                  <th>วันเดินทาง</th>
+                  <th>ประเภทรถ</th>
+                  <th>พนักงานขับรถ</th>
+                  <th>สถานะ</th>
+                  <th class="text-center pe-3">การดำเนินงาน</th>
+                </tr>
+              </thead>
+              <tbody id="driverTableBody">
+                <tr><td colspan="7" class="text-center py-4 text-muted">กำลังดึงข้อมูลงานคนขับ...</td></tr>
+              </tbody>
+            </table>
           </div>
+        </div>
 
-          <div class="row g-3 mb-3">
-            <div class="col-md-6">
-              <label class="form-label small fw-bold">เลขไมล์เริ่มต้น (กม.) <span class="text-danger">*</span></label>
-              <input type="number" class="form-control" id="startMile" required>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label small fw-bold">เลขไมล์สิ้นสุด (กม.) <span class="text-danger">*</span></label>
-              <input type="number" class="form-control" id="endMile" required>
-            </div>
-          </div>
-
-          <div class="row g-3 mb-3">
-            <div class="col-md-6">
-              <label class="form-label small fw-bold">ประเภทน้ำมันที่เติม</label>
-              <input type="text" class="form-control" id="fuelType" placeholder="เช่น ดีเซล / เบนซิน 95">
-            </div>
-            <div class="col-md-6">
-              <label class="form-label small fw-bold">จำนวนเงินค่าน้ำมัน (บาท)</label>
-              <input type="number" class="form-control" id="fuelAmount" value="0">
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label small fw-bold">บันทึกข้อเสนอแนะ / ปัญหาจากการใช้งานรถ</label>
-            <textarea class="form-control" id="driverNote" rows="2" placeholder="เช่น สภาพรถปกติ"></textarea>
-          </div>
-
-          <button type="submit" id="btnSave" class="btn btn-success w-100 py-2 fw-bold">บันทึกปิดงานการเดินทาง</button>
-        </form>
       </div>
-
     </div>
   </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-  let activeRequests = [];
+  <!-- Modal สำหรับคนขับบันทึกไมล์ -->
+  <div class="modal fade" id="driverLogModal" tabindex="-1">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title fw-bold"><i class="bi bi-fuel-pump me-2"></i>บันทึกการใช้งานรถ <span id="driverRequestIdDisplay"></span></h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="driverLogForm">
+            <input type="hidden" id="driverRowIndex">
+            
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">เลขไมล์เริ่มต้น <span class="text-danger">*</span></label>
+                <input type="number" class="form-control" id="driverStartMile" required placeholder="0" onchange="calcTotalDist()">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">เลขไมล์สิ้นสุด <span class="text-danger">*</span></label>
+                <input type="number" class="form-control" id="driverEndMile" required placeholder="0" onchange="calcTotalDist()">
+              </div>
+              <div class="col-12">
+                <div class="p-2 bg-light rounded text-center border">
+                  <span class="small text-muted">ระยะทางรวม: </span>
+                  <strong class="fs-5 text-success" id="driverTotalDistDisplay">0</strong>
+                  <span class="small text-muted"> กิโลเมตร</span>
+                </div>
+              </div>
+            </div>
 
-  // 🔄 Dynamic Routing Navigation
-  function navigateTo(page) {
-    const baseUrl = window.location.href.split('?')[0];
-    if (page === 'home') {
-      window.top.location.href = baseUrl;
-    } else {
-      window.top.location.href = baseUrl + '?p=' + page;
-    }
-  }
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">ประเภทน้ำมันที่เติม</label>
+                <select class="form-select" id="driverFuelType">
+                  <option value="">-- ไม่ได้เติม --</option>
+                  <option value="ดีเซล">ดีเซล</option>
+                  <option value="แก๊สโซฮอล์ 95">แก๊สโซฮอล์ 95</option>
+                  <option value="แก๊สโซฮอล์ 91">แก๊สโซฮอล์ 91</option>
+                  <option value="E20">E20</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">ค่าน้ำมัน (บาท)</label>
+                <input type="number" class="form-control" id="driverFuelAmount" placeholder="0">
+              </div>
+            </div>
 
-  window.onload = function() {
-    google.script.run
-      .withSuccessHandler(populateSelect)
-      .getRequests();
-  };
+            <div class="mb-3">
+              <label class="form-label small fw-bold">หมายเหตุ / สภาพรถยนต์</label>
+              <textarea class="form-control" id="driverNote" rows="2" placeholder="ระบุสภาพรถ หรือหมายเหตุเพิ่มเติม"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
+          <button type="button" class="btn btn-success fw-bold px-4" onclick="saveDriverLogData()"><i class="bi bi-check-circle me-1"></i> บันทึกงานเสร็จสิ้น</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  function populateSelect(requests) {
-    const select = document.getElementById('requestSelect');
-    activeRequests = (requests || []).filter(r => r.status === 'อนุมัติ');
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    let rawRequestsData = [];
+    let driverModalObj;
 
-    if(activeRequests.length === 0) {
-      select.innerHTML = '<option value="" disabled>ไม่มีงานที่รอการบันทึกในขณะนี้</option>';
-      return;
-    }
-
-    let html = '<option value="" selected disabled>-- เลือกรายการงานคำร้อง --</option>';
-    activeRequests.forEach((r, idx) => {
-      html += `<option value="${idx}">${r.requestId} - ${r.fullname} (${r.startDate})</option>`;
-    });
-    select.innerHTML = html;
-  }
-
-  function onSelectRequest() {
-    const idx = document.getElementById('requestSelect').value;
-    const req = activeRequests[idx];
-    
-    if(!req) return;
-
-    document.getElementById('rowIndex').value = req.rowIndex;
-    document.getElementById('infoObjective').innerText = req.objective;
-    document.getElementById('infoUser').innerText = req.fullname + ' (' + req.department + ')';
-    document.getElementById('infoVehicle').innerText = req.vehicleType;
-    
-    document.getElementById('startMile').value = req.startMile || '';
-    document.getElementById('endMile').value = req.endMile || '';
-    
-    document.getElementById('driverForm').style.display = 'block';
-  }
-
-  document.getElementById('driverForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const data = {
-      rowIndex: document.getElementById('rowIndex').value,
-      startMile: document.getElementById('startMile').value,
-      endMile: document.getElementById('endMile').value,
-      fuelType: document.getElementById('fuelType').value,
-      fuelAmount: document.getElementById('fuelAmount').value,
-      driverNote: document.getElementById('driverNote').value
+    window.onload = function() {
+      driverModalObj = new bootstrap.Modal(document.getElementById('driverLogModal'));
+      loadDriverData();
     };
 
-    if(Number(data.endMile) <= Number(data.startMile)) {
-      Swal.fire('คำเตือน', 'เลขไมล์สิ้นสุดต้องมากกว่าเลขไมล์เริ่มต้น', 'warning');
-      return;
+    function loadDriverData() {
+      const tbody = document.getElementById('driverTableBody');
+      tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-muted"><div class="spinner-border spinner-border-sm text-success me-2"></div>กำลังดึงข้อมูลงานคนขับ...</td></tr>`;
+
+      google.script.run
+        .withSuccessHandler(renderDriverTable)
+        .withFailureHandler(err => Swal.fire('เกิดข้อผิดพลาด', err.toString(), 'error'))
+        .getRequests();
     }
 
-    document.getElementById('btnSave').disabled = true;
+    function renderDriverTable(requests) {
+      rawRequestsData = requests || [];
+      const tbody = document.getElementById('driverTableBody');
+      const driverList = rawRequestsData.filter(r => r.status === 'อนุมัติ' || r.status === 'เสร็จสิ้น');
 
-    google.script.run
-      .withSuccessHandler(function(res) {
-        document.getElementById('btnSave').disabled = false;
-        if(res.success) {
-          Swal.fire('สำเร็จ', 'บันทึกข้อมูลการเดินทางเรียบร้อยแล้ว', 'success');
-          document.getElementById('driverForm').reset();
-          document.getElementById('driverForm').style.display = 'none';
-          google.script.run.withSuccessHandler(populateSelect).getRequests();
-        } else {
-          Swal.fire('ผิดพลาด', res.message, 'error');
-        }
-      })
-      .updateDriverLog(data);
-  });
-</script>
+      if (!driverList || driverList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-muted"><i class="bi bi-check2-circle fs-3 d-block mb-1"></i>ไม่มีรายการรถที่อนุมัติรอการบันทึก</td></tr>`;
+        return;
+      }
+
+      let html = '';
+      [...driverList].reverse().forEach(req => {
+        const isCompleted = req.status === 'เสร็จสิ้น';
+        const badgeClass = isCompleted ? 'bg-info text-dark' : 'bg-success text-white';
+
+        html += `
+          <tr>
+            <td class="ps-3 fw-bold text-primary">${req.requestId}</td>
+            <td><div class="fw-medium">${req.fullname}</div><div class="text-muted small">${req.department}</div></td>
+            <td class="small">${req.startDate} (${req.startTime})</td>
+            <td><span class="badge bg-light text-dark border">${req.vehicleType}</span></td>
+            <td>${req.driverName ? `<i class="bi bi-person me-1"></i>${req.driverName}` : '-'}</td>
+            <td><span class="badge ${badgeClass}">${req.status}</span></td>
+            <td class="text-center pe-3">
+              ${isCompleted ? 
+                `<span class="text-muted small"><i class="bi bi-check-all me-1"></i>บันทึกไมล์แล้ว</span>` : 
+                `<button class="btn btn-success btn-sm fw-bold px-3" onclick="openDriverLogModal(${req.rowIndex})"><i class="bi bi-speedometer2 me-1"></i>ลงไมล์/ค่าน้ำมัน</button>`
+              }
+            </td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
+    }
+
+    function openDriverLogModal(rowIndex) {
+      const req = rawRequestsData.find(r => r.rowIndex === rowIndex);
+      if (!req) return;
+
+      document.getElementById('driverRowIndex').value = req.rowIndex;
+      document.getElementById('driverRequestIdDisplay').innerText = `(${req.requestId})`;
+      document.getElementById('driverStartMile').value = req.startMile || '';
+      document.getElementById('driverEndMile').value = req.endMile || '';
+      document.getElementById('driverFuelAmount').value = req.fuelAmount || '';
+      calcTotalDist();
+
+      driverModalObj.show();
+    }
+
+    function calcTotalDist() {
+      const start = Number(document.getElementById('driverStartMile').value) || 0;
+      const end = Number(document.getElementById('driverEndMile').value) || 0;
+      const total = end > start ? (end - start) : 0;
+      document.getElementById('driverTotalDistDisplay').innerText = total;
+    }
+
+    function saveDriverLogData() {
+      const startMile = document.getElementById('driverStartMile').value;
+      const endMile = document.getElementById('driverEndMile').value;
+
+      if(!startMile || !endMile) {
+        Swal.fire('กรอกข้อมูลไม่ครบ', 'กรุณาระบุเลขไมล์เริ่มต้นและสิ้นสุด', 'warning');
+        return;
+      }
+
+      if(Number(endMile) < Number(startMile)) {
+        Swal.fire('ข้อมูลไม่ถูกต้อง', 'เลขไมล์สิ้นสุดต้องมากกว่าเลขไมล์เริ่มต้น', 'warning');
+        return;
+      }
+
+      const data = {
+        rowIndex: document.getElementById('driverRowIndex').value,
+        startMile: startMile,
+        endMile: endMile,
+        fuelType: document.getElementById('driverFuelType').value,
+        fuelAmount: document.getElementById('driverFuelAmount').value,
+        driverNote: document.getElementById('driverNote').value
+      };
+
+      Swal.showLoading();
+      google.script.run
+        .withSuccessHandler(function(res) {
+          driverModalObj.hide();
+          if(res.success) {
+            Swal.fire('สำเร็จ', 'บันทึกข้อมูลระยะทางและค่าน้ำมันเรียบร้อย!', 'success');
+            loadDriverData();
+          } else { Swal.fire('เกิดข้อผิดพลาด', res.message, 'error'); }
+        })
+        .updateDriverLog(data);
+    }
+  </script>
 </body>
 </html>
