@@ -34,9 +34,9 @@
     .btn-submit { background-color: var(--primary-color); border: none; font-weight: 700; font-size: 1.1rem; border-radius: 10px; padding: 14px; }
     
     .navbar-admin { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
-    .stat-card { border: none; border-radius: 14px; }
     .table-card { border: none; border-radius: 14px; background: #ffffff; }
     .badge-status { font-size: 0.8rem; padding: 6px 14px; border-radius: 20px; font-weight: 600; }
+    .btn-action-group .btn { padding: 5px 10px; font-size: 0.8rem; font-weight: 500; }
   </style>
 </head>
 <body>
@@ -195,11 +195,11 @@
               <th>ผู้ยื่นคำร้อง</th>
               <th>ฝ่าย</th>
               <th>วัตถุประสงค์</th>
-              <th>วัน-เวลา เดินทาง</th>
+              <th style="min-width: 170px;">วัน-เวลา เดินทาง</th>
               <th>รถที่ขอ</th>
               <th>คนขับ</th>
               <th>สถานะ</th>
-              <th class="text-center pe-3">จัดการ</th>
+              <th class="text-center pe-3" style="min-width: 320px;">จัดการคำร้อง</th>
             </tr>
           </thead>
           <tbody id="adminTableBody">
@@ -231,12 +231,99 @@
   </div>
 </div>
 
+<!-- Modal สำหรับแก้ไขคำร้อง -->
+<div class="modal fade" id="editModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-warning bg-opacity-25">
+        <h5 class="modal-title fw-bold text-dark"><i class="bi bi-pencil-square me-2"></i>แก้ไขข้อมูลคำร้อง <span id="editRequestIdDisplay"></span></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="editForm">
+          <input type="hidden" id="editRowIndex">
+          
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label small fw-bold">ชื่อ-นามสกุล ผู้ยื่นคำร้อง</label>
+              <input type="text" class="form-control" id="editFullname" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-bold">ฝ่าย / แผนก</label>
+              <input type="text" class="form-control" id="editDepartment" required>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-bold">วัตถุประสงค์</label>
+            <textarea class="form-control" id="editObjective" rows="2" required></textarea>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label small fw-bold">วันที่ออกเดินทาง</label>
+              <input type="date" class="form-control" id="editStartDate" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-bold">เวลาออกเดินทาง</label>
+              <input type="text" class="form-control" id="editStartTime" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-bold">วันที่เดินทางกลับ</label>
+              <input type="date" class="form-control" id="editEndDate" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-bold">เวลาเดินทางกลับ</label>
+              <input type="text" class="form-control" id="editEndTime" required>
+            </div>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-4">
+              <label class="form-label small fw-bold">ประเภทรถ</label>
+              <select class="form-select" id="editVehicleType" required>
+                <option value="รถตู้">รถตู้</option>
+                <option value="รถกระบะ">รถกระบะ</option>
+                <option value="รถบัส">รถบัส</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label small fw-bold">พนักงานขับรถ</label>
+              <input type="text" class="form-control" id="editDriverName">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label small fw-bold">สถานะคำร้อง</label>
+              <select class="form-select" id="editStatus" required>
+                <option value="รออนุมัติ">รออนุมัติ</option>
+                <option value="อนุมัติ">อนุมัติ</option>
+                <option value="ไม่อนุมัติ">ไม่อนุมัติ</option>
+                <option value="เสร็จสิ้น">เสร็จสิ้น</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
+        <button type="button" class="btn btn-warning text-dark fw-bold" onclick="saveEditedData()">บันทึกการแก้ไข</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
   const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwszE9zY8keM6n0YL-yXRKpfurNfxwxPGClM98Y7C8xiIQQQXppF605e54l2XEUDYLq/exec";
   const ADMIN_USER = "piangfah.admin";
   const ADMIN_PASS = "Prtc@2026";
+  
+  let rawRequestsData = [];
+  let editModalObj;
+
+  window.onload = function() {
+    editModalObj = new bootstrap.Modal(document.getElementById('editModal'));
+  };
 
   function switchView(viewId) {
     if (viewId === 'viewAdmin') {
@@ -292,7 +379,6 @@
     switchView('viewForm');
   }
 
-  // 📥 ดึงข้อมูลคำร้องขอใช้รถมาแสดงบนตาราง Admin
   function loadAdminData() {
     const tbody = document.getElementById('adminTableBody');
     tbody.innerHTML = `<tr><td colspan="9" class="text-center py-5 text-muted"><div class="spinner-border spinner-border-sm text-primary me-2"></div>กำลังดึงข้อมูลล่าสุด...</td></tr>`;
@@ -310,15 +396,17 @@
     }
   }
 
+  // 🎯 เรนเดอร์สร้างปุ่ม อนุมัติ / ไม่อนุมัติ / แก้ไข / ลบ ให้ขึ้นครบ 100%
   function renderAdminTable(requests) {
+    rawRequestsData = requests || [];
     const tbody = document.getElementById('adminTableBody');
-    if (!requests || requests.length === 0) {
+    if (!rawRequestsData || rawRequestsData.length === 0) {
       tbody.innerHTML = `<tr><td colspan="9" class="text-center py-5 text-muted"><i class="bi bi-inbox fs-2 d-block mb-2"></i>ไม่พบข้อมูลคำร้องขอใช้รถ</td></tr>`;
       return;
     }
 
     let html = '';
-    [...requests].reverse().forEach(req => {
+    [...rawRequestsData].reverse().forEach(req => {
       let badgeClass = 'bg-warning text-dark';
       if (req.status === 'อนุมัติ') badgeClass = 'bg-success text-white';
       else if (req.status === 'ไม่อนุมัติ') badgeClass = 'bg-danger text-white';
@@ -329,7 +417,7 @@
           <td class="ps-3 fw-bold text-primary">${req.requestId}<div class="text-muted fw-normal small">${req.timestamp || ''}</div></td>
           <td><div class="fw-medium">${req.fullname}</div></td>
           <td><span class="badge bg-light text-dark border">${req.department}</span></td>
-          <td><div class="text-truncate" style="max-width: 160px;" title="${req.objective}">${req.objective}</div></td>
+          <td><div class="text-truncate" style="max-width: 150px;" title="${req.objective}">${req.objective}</div></td>
           <td class="small">
             <div><strong class="text-muted">ออก:</strong> ${req.startDate} ${req.startTime}</div>
             <div><strong class="text-muted">กลับ:</strong> ${req.endDate} ${req.endTime}</div>
@@ -338,12 +426,181 @@
           <td>${req.driverName ? `<i class="bi bi-person me-1"></i>${req.driverName}` : '<span class="text-muted small">-</span>'}</td>
           <td><span class="badge badge-status ${badgeClass}">${req.status}</span></td>
           <td class="text-center pe-3">
-            <span class="text-muted small">ดูข้อมูลในชีต</span>
+            <div class="btn-group btn-action-group" role="group">
+              <button class="btn btn-success d-inline-flex align-items-center gap-1" onclick="approveRequest(${req.rowIndex}, '${req.requestId}', '${req.driverName || ''}')">
+                <i class="bi bi-check-circle-fill"></i> อนุมัติ
+              </button>
+              <button class="btn btn-danger d-inline-flex align-items-center gap-1" onclick="rejectRequest(${req.rowIndex}, '${req.requestId}')">
+                <i class="bi bi-x-circle-fill"></i> ไม่อนุมัติ
+              </button>
+              <button class="btn btn-warning text-dark d-inline-flex align-items-center gap-1" onclick="openEditModal(${req.rowIndex})">
+                <i class="bi bi-pencil-fill"></i> แก้ไข
+              </button>
+              <button class="btn btn-secondary d-inline-flex align-items-center gap-1" onclick="deleteItem(${req.rowIndex}, '${req.requestId}')">
+                <i class="bi bi-trash-fill"></i> ลบ
+              </button>
+            </div>
           </td>
         </tr>
       `;
     });
     tbody.innerHTML = html;
+  }
+
+  function approveRequest(rowIndex, requestId, currentDriver) {
+    Swal.fire({
+      title: 'อนุมัติคำร้อง ' + requestId,
+      html: `
+        <div class="text-start mb-3">
+          <label class="form-label small fw-bold mb-1">ผู้รับผิดชอบขับรถ (คนขับ):</label>
+          <input id="swalDriverName" class="form-control" placeholder="ระบุชื่อคนขับรถ..." value="${currentDriver}">
+        </div>
+        <div class="text-start">
+          <label class="form-label small fw-bold mb-1">ชื่อผู้อนุมัติ (แอดมิน):</label>
+          <input id="swalAdminName" class="form-control" placeholder="ชื่อแอดมิน" value="แอดมิน">
+        </div>
+      `,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#10b981',
+      cancelButtonColor: '#64748b',
+      confirmButtonText: 'ยืนยันอนุมัติ',
+      cancelButtonText: 'ยกเลิก',
+      focusConfirm: false,
+      preConfirm: () => {
+        return {
+          driverName: document.getElementById('swalDriverName').value,
+          adminName: document.getElementById('swalAdminName').value
+        }
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const { driverName, adminName } = result.value;
+        Swal.showLoading();
+        if (typeof google !== 'undefined' && google.script && google.script.run) {
+          google.script.run
+            .withSuccessHandler(function(res) {
+              if(res.success) {
+                Swal.fire('สำเร็จ', 'อนุมัติคำร้องเรียบร้อยแล้ว', 'success');
+                loadAdminData();
+              } else { Swal.fire('ผิดพลาด', res.message, 'error'); }
+            })
+            .updateAdminApproval(rowIndex, 'อนุมัติ', driverName, adminName || 'แอดมิน');
+        }
+      }
+    });
+  }
+
+  function rejectRequest(rowIndex, requestId) {
+    Swal.fire({
+      title: 'ยืนยันไม่อนุมัติคำร้อง?',
+      text: 'รหัสคำร้อง: ' + requestId,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#64748b',
+      confirmButtonText: 'ไม่อนุมัติ',
+      cancelButtonText: 'ยกเลิก'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.showLoading();
+        if (typeof google !== 'undefined' && google.script && google.script.run) {
+          google.script.run
+            .withSuccessHandler(function(res) {
+              if(res.success) {
+                Swal.fire('เรียบร้อย', 'ปรับสถานะเป็นไม่อนุมัติเรียบร้อย', 'info');
+                loadAdminData();
+              } else { Swal.fire('ผิดพลาด', res.message, 'error'); }
+            })
+            .updateAdminApproval(rowIndex, 'ไม่อนุมัติ', '', 'แอดมิน');
+        }
+      }
+    });
+  }
+
+  function openEditModal(rowIndex) {
+    const req = rawRequestsData.find(r => r.rowIndex === rowIndex);
+    if (!req) return;
+
+    document.getElementById('editRowIndex').value = req.rowIndex;
+    document.getElementById('editRequestIdDisplay').innerText = `(${req.requestId})`;
+    document.getElementById('editFullname').value = req.fullname;
+    document.getElementById('editDepartment').value = req.department;
+    document.getElementById('editObjective').value = req.objective;
+    document.getElementById('editStartDate').value = formatDateForInput(req.startDate);
+    document.getElementById('editStartTime').value = req.startTime;
+    document.getElementById('editEndDate').value = formatDateForInput(req.endDate);
+    document.getElementById('editEndTime').value = req.endTime;
+    document.getElementById('editVehicleType').value = req.vehicleType || 'รถตู้';
+    document.getElementById('editDriverName').value = req.driverName || '';
+    document.getElementById('editStatus').value = req.status || 'รออนุมัติ';
+
+    editModalObj.show();
+  }
+
+  function formatDateForInput(dateStr) {
+    if(!dateStr) return '';
+    if(dateStr.includes('/')) {
+      const parts = dateStr.split('/');
+      if(parts.length === 3) return `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
+    }
+    return dateStr;
+  }
+
+  function saveEditedData() {
+    const data = {
+      rowIndex: document.getElementById('editRowIndex').value,
+      fullname: document.getElementById('editFullname').value,
+      department: document.getElementById('editDepartment').value,
+      objective: document.getElementById('editObjective').value,
+      startDate: document.getElementById('editStartDate').value,
+      startTime: document.getElementById('editStartTime').value,
+      endDate: document.getElementById('editEndDate').value,
+      endTime: document.getElementById('editEndTime').value,
+      vehicleType: document.getElementById('editVehicleType').value,
+      driverName: document.getElementById('editDriverName').value,
+      status: document.getElementById('editStatus').value
+    };
+
+    Swal.showLoading();
+    if (typeof google !== 'undefined' && google.script && google.script.run) {
+      google.script.run
+        .withSuccessHandler(function(res) {
+          editModalObj.hide();
+          if(res.success) {
+            Swal.fire('สำเร็จ', 'บันทึกการแก้ไขเรียบร้อย!', 'success');
+            loadAdminData();
+          } else { Swal.fire('เกิดข้อผิดพลาด', res.message, 'error'); }
+        })
+        .updateRequestDetail(data);
+    }
+  }
+
+  function deleteItem(rowIndex, requestId) {
+    Swal.fire({
+      title: 'ยืนยันการลบข้อมูล?',
+      text: 'รหัสคำร้อง ' + requestId + ' จะถูกลบถาวรออกจาก Google Sheet',
+      icon: 'error',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#64748b',
+      confirmButtonText: 'ยืนยันลบ',
+      cancelButtonText: 'ยกเลิก'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.showLoading();
+        if (typeof google !== 'undefined' && google.script && google.script.run) {
+          google.script.run
+            .withSuccessHandler(function(res) {
+              if(res.success) {
+                Swal.fire('สำเร็จ', 'ลบข้อมูลเรียบร้อยแล้ว', 'success');
+                loadAdminData();
+              } else { Swal.fire('เกิดข้อผิดพลาด', res.message, 'error'); }
+            })
+            .deleteRequest(rowIndex);
+        }
+      }
+    });
   }
 
   function calculateDays() {
