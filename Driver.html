@@ -18,15 +18,14 @@
   <div class="row justify-content-center">
     <div class="col-lg-8">
       
+      <!-- Navigation Buttons -->
       <div class="mb-3 d-flex gap-2">
-        <a href="https://script.google.com/macros/s/AKfycbwszE9zY8keM6n0YL-yXRKpfurNfxwxPGClM98Y7C8xiIQQQXppF605e54l2XEUDYLq/exec" 
-           target="_self" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+        <button onclick="navigateTo('home')" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
           <i class="bi bi-arrow-left me-1"></i> ย้อนกลับหน้าหลัก
-        </a>
-        <a href="https://script.google.com/macros/s/AKfycbwszE9zY8keM6n0YL-yXRKpfurNfxwxPGClM98Y7C8xiIQQQXppF605e54l2XEUDYLq/exec?p=admin" 
-           target="_self" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+        </button>
+        <button onclick="navigateTo('admin')" class="btn btn-outline-primary btn-sm rounded-pill px-3">
           <i class="bi bi-shield-lock-fill me-1"></i> ระบบแอดมิน
-        </a>
+        </button>
       </div>
 
       <div class="card card-custom p-4 bg-white shadow-sm">
@@ -86,6 +85,16 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
   let activeRequests = [];
+
+  // 🔄 Dynamic Routing Navigation
+  function navigateTo(page) {
+    const baseUrl = window.location.href.split('?')[0];
+    if (page === 'home') {
+      window.top.location.href = baseUrl;
+    } else {
+      window.top.location.href = baseUrl + '?p=' + page;
+    }
+  }
 
   window.onload = function() {
     google.script.run
