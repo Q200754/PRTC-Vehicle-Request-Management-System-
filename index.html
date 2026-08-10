@@ -191,11 +191,19 @@
         <table class="table table-hover align-middle mb-0">
           <thead class="table-light">
             <tr>
-              <th class="ps-3">Request ID</th><th>ผู้ยื่นคำร้อง</th><th>ฝ่าย</th><th>วัตถุประสงค์</th><th>วัน-เวลา เดินทาง</th><th>รถที่ขอ</th><th>คนขับ</th><th>สถานะ</th>
+              <th class="ps-3">Request ID</th>
+              <th>ผู้ยื่นคำร้อง</th>
+              <th>ฝ่าย</th>
+              <th>วัตถุประสงค์</th>
+              <th>วัน-เวลา เดินทาง</th>
+              <th>รถที่ขอ</th>
+              <th>คนขับ</th>
+              <th>สถานะ</th>
+              <th class="text-center pe-3">จัดการ</th>
             </tr>
           </thead>
           <tbody id="adminTableBody">
-            <tr><td colspan="8" class="text-center py-5 text-muted">กดปุ่มรีเฟรชเพื่อดึงข้อมูล...</td></tr>
+            <tr><td colspan="9" class="text-center py-5 text-muted">กดปุ่มรีเฟรชเพื่อดึงข้อมูล...</td></tr>
           </tbody>
         </table>
       </div>
@@ -230,7 +238,6 @@
   const ADMIN_USER = "piangfah.admin";
   const ADMIN_PASS = "Prtc@2026";
 
-  // 🔄 ฟังก์ชันสลับหน้าภายในไฟล์เดียว (ไม่ต้องโหลด URL ใหม่ ไม่หลุด 404)
   function switchView(viewId) {
     if (viewId === 'viewAdmin') {
       const isLoggedIn = sessionStorage.getItem('adminIsLoggedIn');
@@ -238,6 +245,7 @@
         promptLoginModal();
         return;
       }
+      loadAdminData();
     }
     document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
     document.getElementById(viewId).classList.add('active');
@@ -282,6 +290,60 @@
   function logoutAdmin() {
     sessionStorage.removeItem('adminIsLoggedIn');
     switchView('viewForm');
+  }
+
+  // 📥 ดึงข้อมูลคำร้องขอใช้รถมาแสดงบนตาราง Admin
+  function loadAdminData() {
+    const tbody = document.getElementById('adminTableBody');
+    tbody.innerHTML = `<tr><td colspan="9" class="text-center py-5 text-muted"><div class="spinner-border spinner-border-sm text-primary me-2"></div>กำลังดึงข้อมูลล่าสุด...</td></tr>`;
+
+    if (typeof google !== 'undefined' && google.script && google.script.run) {
+      google.script.run
+        .withSuccessHandler(renderAdminTable)
+        .withFailureHandler(err => Swal.fire('เกิดข้อผิดพลาด', err.toString(), 'error'))
+        .getRequests();
+    } else {
+      fetch(GAS_WEBAPP_URL + '?action=getRequests')
+        .then(res => res.json())
+        .then(data => renderAdminTable(data))
+        .catch(err => Swal.fire('เกิดข้อผิดพลาด', err.toString(), 'error'));
+    }
+  }
+
+  function renderAdminTable(requests) {
+    const tbody = document.getElementById('adminTableBody');
+    if (!requests || requests.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="9" class="text-center py-5 text-muted"><i class="bi bi-inbox fs-2 d-block mb-2"></i>ไม่พบข้อมูลคำร้องขอใช้รถ</td></tr>`;
+      return;
+    }
+
+    let html = '';
+    [...requests].reverse().forEach(req => {
+      let badgeClass = 'bg-warning text-dark';
+      if (req.status === 'อนุมัติ') badgeClass = 'bg-success text-white';
+      else if (req.status === 'ไม่อนุมัติ') badgeClass = 'bg-danger text-white';
+      else if (req.status === 'เสร็จสิ้น') badgeClass = 'bg-info text-dark';
+
+      html += `
+        <tr>
+          <td class="ps-3 fw-bold text-primary">${req.requestId}<div class="text-muted fw-normal small">${req.timestamp || ''}</div></td>
+          <td><div class="fw-medium">${req.fullname}</div></td>
+          <td><span class="badge bg-light text-dark border">${req.department}</span></td>
+          <td><div class="text-truncate" style="max-width: 160px;" title="${req.objective}">${req.objective}</div></td>
+          <td class="small">
+            <div><strong class="text-muted">ออก:</strong> ${req.startDate} ${req.startTime}</div>
+            <div><strong class="text-muted">กลับ:</strong> ${req.endDate} ${req.endTime}</div>
+          </td>
+          <td><span class="fw-medium">${req.vehicleType}</span></td>
+          <td>${req.driverName ? `<i class="bi bi-person me-1"></i>${req.driverName}` : '<span class="text-muted small">-</span>'}</td>
+          <td><span class="badge badge-status ${badgeClass}">${req.status}</span></td>
+          <td class="text-center pe-3">
+            <span class="text-muted small">ดูข้อมูลในชีต</span>
+          </td>
+        </tr>
+      `;
+    });
+    tbody.innerHTML = html;
   }
 
   function calculateDays() {
