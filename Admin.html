@@ -3,664 +3,362 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PRTC-VRMS | แผงควบคุมแอดมิน</title>
+  <title>วิทยาลัยเทคโนโลยีพระมหาไถ่ พัทยา | ยื่นคำร้องขอใช้รถ</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <style>
+    :root {
+      --primary-color: #1e3a8a;
+      --primary-hover: #1e40af;
+      --bg-color: #f8fafc;
+      --card-border: #e2e8f0;
+    }
     body {
       font-family: 'Sarabun', sans-serif;
-      background-color: #f1f5f9;
+      background-color: var(--bg-color);
       color: #334155;
     }
-    .navbar-admin {
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-    .stat-card {
-      border: none;
-      border-radius: 12px;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .stat-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.08) !important;
-    }
-    .table-card {
-      border: none;
-      border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+    .form-container {
+      max-width: 880px;
+      margin: 30px auto;
       background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      padding: 40px;
+      border-top: 6px solid var(--primary-color);
     }
-    .table thead {
-      background-color: #f8fafc;
-      color: #475569;
-      font-weight: 600;
+    .form-header {
+      text-align: center;
+      margin-bottom: 30px;
+      border-bottom: 2px solid #f1f5f9;
+      padding-bottom: 20px;
     }
-    .badge-status {
-      font-size: 0.82rem;
-      padding: 6px 12px;
+    .form-header h4 {
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 6px;
+    }
+    .nav-btn-group .btn {
       border-radius: 20px;
-      font-weight: 500;
+      font-weight: 600;
+      padding: 6px 16px;
+      transition: all 0.2s ease;
     }
-    .btn-filter.active {
-      background-color: #1e293b !important;
-      color: #ffffff !important;
+    .section-title {
+      font-weight: 700;
+      color: #0f172a;
+      font-size: 1.05rem;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    .time-box {
-      font-size: 0.88rem;
-      line-height: 1.5;
+    .custom-card-option {
+      border: 2px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background-color: #ffffff;
     }
-    .btn-action-group .btn {
-      padding: 5px 10px;
-      font-size: 0.82rem;
-      font-weight: 500;
+    .custom-card-option:hover {
+      border-color: #93c5fd;
+      background-color: #f0f9ff;
     }
-    #adminMainContent {
-      display: none;
+    .form-check-input:checked + .custom-card-label {
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+    .has-checked {
+      border-color: var(--primary-color) !important;
+      background-color: #eff6ff !important;
+    }
+    .btn-submit {
+      background-color: var(--primary-color);
+      border: none;
+      font-weight: 700;
+      font-size: 1.1rem;
+      border-radius: 10px;
+      padding: 14px;
+      transition: all 0.2s ease;
+    }
+    .btn-submit:hover {
+      background-color: var(--primary-hover);
+    }
+    @media (max-width: 576px) {
+      .form-container { padding: 24px 18px; margin: 15px auto; }
     }
   </style>
 </head>
 <body>
 
-<nav class="navbar navbar-dark navbar-admin mb-4 py-3">
-  <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
-    <div class="d-flex align-items-center gap-2">
-      <a href="https://script.google.com/macros/s/AKfycbwszE9zY8keM6n0YL-yXRKpfurNfxwxPGClM98Y7C8xiIQQQXppF605e54l2XEUDYLq/exec" 
-         target="_self" class="btn btn-outline-light btn-sm rounded-pill px-3">
-        <i class="bi bi-arrow-left me-1"></i> หน้าหลัก
+<div class="container py-2">
+  <div class="form-container">
+    
+    <!-- Navigation Buttons -->
+    <div class="d-flex justify-content-end gap-2 nav-btn-group mb-3">
+      <a href="?p=driver" target="_self" class="btn btn-outline-success btn-sm">
+        <i class="bi bi-speedometer2 me-1"></i> สำหรับคนขับ
       </a>
-      <a href="https://script.google.com/macros/s/AKfycbwszE9zY8keM6n0YL-yXRKpfurNfxwxPGClM98Y7C8xiIQQQXppF605e54l2XEUDYLq/exec?p=driver" 
-         target="_self" class="btn btn-outline-success btn-sm rounded-pill px-3 text-white border-success">
-        <i class="bi bi-card-checklist me-1"></i> หน้าบันทึกคนขับ
+      <a href="?p=admin" target="_self" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-shield-lock-fill me-1"></i> ระบบแอดมิน
       </a>
-      <span class="navbar-brand mb-0 h4 fw-bold d-flex align-items-center ms-2">
-        <i class="bi bi-shield-check me-2 text-warning fs-3"></i> PRTC-VRMS Admin Panel
-      </span>
     </div>
-    <div class="d-flex align-items-center gap-3">
-      <span class="text-white-50 small d-none d-md-inline">วิทยาลัยเทคโนโลยีพระมหาไถ่ พัทยา</span>
-      <button id="btnLogout" class="btn btn-outline-danger btn-sm rounded-pill px-3" style="display:none;" onclick="logoutAdmin()">
-        <i class="bi bi-box-arrow-right me-1"></i> ออกจากระบบ
+
+    <!-- Header Title -->
+    <div class="form-header">
+      <h4>วิทยาลัยเทคโนโลยีพระมหาไถ่ พัทยา</h4>
+      <h5 class="text-muted fw-normal fs-6">แบบยื่นคำร้องขอใช้รถยนต์สถาบัน</h5>
+    </div>
+
+    <form id="vehicleRequestForm">
+      
+      <!-- 1. ข้อมูลผู้ขอใช้ -->
+      <div class="mb-4">
+        <div class="section-title"><i class="bi bi-person-circle text-primary"></i> ๑. ข้อมูลผู้ยื่นคำร้อง</div>
+        <div class="row g-3">
+          <div class="col-md-7">
+            <label class="form-label small fw-bold">ชื่อ-นามสกุล ผู้ขอใช้ <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" name="fullname" required placeholder="ระบุชื่อ-นามสกุล">
+          </div>
+          <div class="col-md-5">
+            <label class="form-label small fw-bold">ฝ่าย / แผนก <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" name="department" required placeholder="เช่น เทคโนโลยีสารสนเทศ">
+          </div>
+          <div class="col-12">
+            <label class="form-label small fw-bold">วัตถุประสงค์การใช้งาน <span class="text-danger">*</span></label>
+            <textarea class="form-control" name="objective" rows="2" required placeholder="ระบุรายละเอียดวัตถุประสงค์การเดินทาง"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. กำหนดการเดินทาง -->
+      <div class="mb-4">
+        <div class="section-title"><i class="bi bi-calendar-event text-primary"></i> ๒. กำหนดการเดินทาง</div>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="p-3 border rounded-3 bg-light">
+              <span class="fw-bold text-dark d-block mb-2 small"><i class="bi bi-box-arrow-up-right me-1 text-primary"></i> ออกเดินทาง</span>
+              <div class="row g-2">
+                <div class="col-7">
+                  <label class="small text-muted">วันที่</label>
+                  <input type="date" class="form-control" name="startDate" id="startDate" required onchange="calculateDays()">
+                </div>
+                <div class="col-5">
+                  <label class="small text-muted">เวลา</label>
+                  <input type="time" class="form-control" name="startTime" required>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="p-3 border rounded-3 bg-light">
+              <span class="fw-bold text-dark d-block mb-2 small"><i class="bi bi-box-arrow-in-down-left me-1 text-success"></i> เดินทางกลับ</span>
+              <div class="row g-2">
+                <div class="col-7">
+                  <label class="small text-muted">วันที่</label>
+                  <input type="date" class="form-control" name="endDate" id="endDate" required onchange="calculateDays()">
+                </div>
+                <div class="col-5">
+                  <label class="small text-muted">เวลา</label>
+                  <input type="time" class="form-control" name="endTime" required>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="input-group">
+              <span class="input-group-text bg-white fw-bold text-secondary">รวมระยะเวลาเดินทาง</span>
+              <input type="number" class="form-control text-center fw-bold text-primary fs-5" name="durationDays" id="durationDays" placeholder="0" readonly>
+              <span class="input-group-text bg-white fw-bold text-secondary">วัน</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. รายละเอียดการรับส่ง & ผู้ร่วมเดินทาง -->
+      <div class="mb-4">
+        <div class="section-title"><i class="bi bi-geo-alt text-primary"></i> ๓. การรับ-ส่ง และ จำนวนผู้ร่วมเดินทาง</div>
+        <div class="row g-3">
+          <div class="col-md-8">
+            <label class="form-label small fw-bold">ลักษณะการรับ-ส่ง <span class="text-danger">*</span></label>
+            <div class="d-flex flex-wrap gap-2">
+              <label class="custom-card-option flex-fill">
+                <input class="form-check-input me-1" type="radio" name="tripType" value="ไปส่งเท่านั้น" required onchange="updateRadioHighlight(this)">
+                <span class="custom-card-label small">ไปส่งเท่านั้น</span>
+              </label>
+              <label class="custom-card-option flex-fill">
+                <input class="form-check-input me-1" type="radio" name="tripType" value="รับกลับเท่านั้น" onchange="updateRadioHighlight(this)">
+                <span class="custom-card-label small">รับกลับเท่านั้น</span>
+              </label>
+              <label class="custom-card-option flex-fill">
+                <input class="form-check-input me-1" type="radio" name="tripType" value="ไปส่งและรอรับกลับ" onchange="updateRadioHighlight(this)">
+                <span class="custom-card-label small">รอรับกลับ</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label small fw-bold">ผู้ร่วมเดินทาง <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <input type="number" class="form-control" name="passengerCount" min="1" value="1" required>
+              <span class="input-group-text bg-white">คน</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. ตัวเลือกรถ & ผู้ขับ -->
+      <div class="mb-4">
+        <div class="section-title"><i class="bi bi-truck text-primary"></i> ๔. ยานพาหนะ และ กิจกรรม</div>
+        <div class="row g-3">
+          <div class="col-md-12">
+            <label class="form-label small fw-bold">ประเภทรถที่ต้องการใช้ <span class="text-danger">*</span></label>
+            <div class="d-flex flex-wrap gap-2">
+              <label class="custom-card-option flex-fill text-center">
+                <input class="form-check-input me-1" type="radio" name="vehicleType" value="รถตู้" required onchange="updateRadioHighlight(this)">
+                <span class="custom-card-label"><i class="bi bi-bus-front me-1"></i> รถตู้</span>
+              </label>
+              <label class="custom-card-option flex-fill text-center">
+                <input class="form-check-input me-1" type="radio" name="vehicleType" value="รถกระบะ" onchange="updateRadioHighlight(this)">
+                <span class="custom-card-label"><i class="bi bi-truck me-1"></i> รถกระบะ</span>
+              </label>
+              <label class="custom-card-option flex-fill text-center">
+                <input class="form-check-input me-1" type="radio" name="vehicleType" value="รถบัส" onchange="updateRadioHighlight(this)">
+                <span class="custom-card-label"><i class="bi bi-terminal me-1"></i> รถบัส</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label small fw-bold">ผู้รับผิดชอบในการขับรถ <small class="text-muted">(ถ้ามีระบุ)</small></label>
+            <input type="text" class="form-control" name="driverName" placeholder="ระบุชื่อผู้ขับรถ">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label small fw-bold">ประเภทกิจกรรม <span class="text-danger">*</span></label>
+            <select class="form-select" name="activity" required>
+              <option value="" selected disabled>-- เลือกกิจกรรม --</option>
+              <option value="งานโรงเรียน">งานโรงเรียน</option>
+              <option value="งานกิจกรรมอื่น ๆ">งานกิจกรรมอื่น ๆ</option>
+              <option value="งานส่วนตัว">งานส่วนตัว</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" id="btnSubmit" class="btn btn-primary btn-submit w-100 shadow-sm mt-3">
+        <i class="bi bi-send-fill me-2"></i> ยื่นคำร้องขอใช้รถยนต์
       </button>
-    </div>
-  </div>
-</nav>
 
-<div id="adminMainContent" class="container-fluid px-4 mb-5">
-
-  <div class="row g-3 mb-4">
-    <div class="col-6 col-md-3">
-      <div class="card stat-card shadow-sm p-3 border-start border-4 border-primary bg-white">
-        <div class="d-flex align-items-center justify-content-between">
-          <div>
-            <div class="text-muted small fw-medium">คำร้องทั้งหมด</div>
-            <div class="fs-3 fw-bold text-dark" id="statTotal">0</div>
-          </div>
-          <div class="bg-primary bg-opacity-10 p-3 rounded-circle text-primary">
-            <i class="bi bi-file-earmark-text fs-4"></i>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-6 col-md-3">
-      <div class="card stat-card shadow-sm p-3 border-start border-4 border-warning bg-white">
-        <div class="d-flex align-items-center justify-content-between">
-          <div>
-            <div class="text-muted small fw-medium">รออนุมัติ</div>
-            <div class="fs-3 fw-bold text-warning" id="statPending">0</div>
-          </div>
-          <div class="bg-warning bg-opacity-10 p-3 rounded-circle text-warning">
-            <i class="bi bi-clock-history fs-4"></i>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-6 col-md-3">
-      <div class="card stat-card shadow-sm p-3 border-start border-4 border-success bg-white">
-        <div class="d-flex align-items-center justify-content-between">
-          <div>
-            <div class="text-muted small fw-medium">อนุมัติแล้ว</div>
-            <div class="fs-3 fw-bold text-success" id="statApproved">0</div>
-          </div>
-          <div class="bg-success bg-opacity-10 p-3 rounded-circle text-success">
-            <i class="bi bi-check-circle fs-4"></i>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-6 col-md-3">
-      <div class="card stat-card shadow-sm p-3 border-start border-4 border-danger bg-white">
-        <div class="d-flex align-items-center justify-content-between">
-          <div>
-            <div class="text-muted small fw-medium">ไม่อนุมัติ</div>
-            <div class="fs-3 fw-bold text-danger" id="statRejected">0</div>
-          </div>
-          <div class="bg-danger bg-opacity-10 p-3 rounded-circle text-danger">
-            <i class="bi bi-x-circle fs-4"></i>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="card table-card p-3 mb-4">
-    <div class="row g-3 align-items-center justify-content-between">
-      <div class="col-md-6 d-flex flex-wrap gap-2">
-        <button class="btn btn-outline-secondary btn-sm btn-filter active" onclick="filterStatus('ALL', this)">ทั้งหมด</button>
-        <button class="btn btn-outline-warning btn-sm btn-filter text-dark" onclick="filterStatus('รออนุมัติ', this)">รออนุมัติ</button>
-        <button class="btn btn-outline-success btn-sm btn-filter" onclick="filterStatus('อนุมัติ', this)">อนุมัติแล้ว</button>
-        <button class="btn btn-outline-danger btn-sm btn-filter" onclick="filterStatus('ไม่อนุมัติ', this)">ไม่อนุมัติ</button>
-      </div>
-
-      <div class="col-md-6 d-flex gap-2">
-        <div class="input-group">
-          <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
-          <input type="text" id="searchInput" class="form-control border-start-0" placeholder="ค้นหาตามรหัส, ชื่อผู้ยื่น, หรือฝ่าย..." onkeyup="filterRequests()">
-        </div>
-        <button class="btn btn-primary d-flex align-items-center gap-1 text-nowrap px-3" onclick="loadRequests()">
-          <i class="bi bi-arrow-clockwise"></i> รีเฟรช
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <div class="card table-card overflow-hidden">
-    <div class="table-responsive">
-      <table class="table table-hover align-middle mb-0">
-        <thead>
-          <tr>
-            <th class="ps-3">Request ID</th>
-            <th>ผู้ยื่นคำร้อง</th>
-            <th>ฝ่าย / แผนก</th>
-            <th>วัตถุประสงค์</th>
-            <th style="min-width: 200px;">วัน-เวลา เดินทาง</th>
-            <th>รถที่เลือก</th>
-            <th>คนขับรถ</th>
-            <th>สถานะ</th>
-            <th class="text-center pe-3" style="min-width: 320px;">จัดการคำร้อง</th>
-          </tr>
-        </thead>
-        <tbody id="requestTableBody">
-          <tr>
-            <td colspan="9" class="text-center py-5 text-muted">
-              <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
-              กำลังดึงข้อมูลคำร้องล่าสุด...
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-</div>
-
-<div class="modal fade" id="editModal" tabindex="-1">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header bg-warning bg-opacity-25">
-        <h5 class="modal-title fw-bold text-dark"><i class="bi bi-pencil-square me-2"></i>แก้ไขข้อมูลคำร้อง <span id="editRequestIdDisplay"></span></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <form id="editForm">
-          <input type="hidden" id="editRowIndex">
-          
-          <div class="row g-3 mb-3">
-            <div class="col-md-6">
-              <label class="form-label small fw-bold">ชื่อ-นามสกุล ผู้ยื่นคำร้อง</label>
-              <input type="text" class="form-control" id="editFullname" required>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label small fw-bold">ฝ่าย / แผนก</label>
-              <input type="text" class="form-control" id="editDepartment" required>
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label small fw-bold">วัตถุประสงค์</label>
-            <textarea class="form-control" id="editObjective" rows="2" required></textarea>
-          </div>
-
-          <div class="row g-3 mb-3">
-            <div class="col-md-6">
-              <label class="form-label small fw-bold">วันที่ออกเดินทาง</label>
-              <input type="date" class="form-control" id="editStartDate" required>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label small fw-bold">เวลาออกเดินทาง</label>
-              <input type="text" class="form-control" id="editStartTime" placeholder="เช่น 08:30 น." required>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label small fw-bold">วันที่เดินทางกลับ</label>
-              <input type="date" class="form-control" id="editEndDate" required>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label small fw-bold">เวลาเดินทางกลับ</label>
-              <input type="text" class="form-control" id="editEndTime" placeholder="เช่น 16:30 น." required>
-            </div>
-          </div>
-
-          <div class="row g-3 mb-3">
-            <div class="col-md-4">
-              <label class="form-label small fw-bold">ประเภทรถที่ขอ</label>
-              <select class="form-select" id="editVehicleType" required>
-                <option value="รถตู้">รถตู้</option>
-                <option value="รถกระบะ">รถกระบะ</option>
-                <option value="รถบัส">รถบัส</option>
-                <option value="รถเก๋ง">รถเก๋ง</option>
-              </select>
-            </div>
-            <div class="col-md-4">
-              <label class="form-label small fw-bold">พนักงานขับรถ</label>
-              <input type="text" class="form-control" id="editDriverName" placeholder="ชื่อพนักงานขับรถ">
-            </div>
-            <div class="col-md-4">
-              <label class="form-label small fw-bold">สถานะคำร้อง</label>
-              <select class="form-select" id="editStatus" required>
-                <option value="รออนุมัติ">รออนุมัติ</option>
-                <option value="อนุมัติ">อนุมัติ</option>
-                <option value="ไม่อนุมัติ">ไม่อนุมัติ</option>
-                <option value="เสร็จสิ้น">เสร็จสิ้น</option>
-              </select>
-            </div>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
-        <button type="button" class="btn btn-warning text-dark fw-bold" onclick="saveEditedData()">บันทึกการแก้ไข</button>
-      </div>
-    </div>
+    </form>
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-  let rawRequestsData = [];
-  let currentStatusFilter = 'ALL';
-  let editModalObj;
+  const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwszE9zY8keM6n0YL-yXRKpfurNfxwxPGClM98Y7C8xiIQQQXppF605e54l2XEUDYLq/exec";
 
-  const ADMIN_USER = "piangfah.admin";
-  const ADMIN_PASS = "Prtc@2026";
-
-  window.onload = function() {
-    editModalObj = new bootstrap.Modal(document.getElementById('editModal'));
-    checkLoginSession();
-  };
-
-  function checkLoginSession() {
-    const isLoggedIn = sessionStorage.getItem('adminIsLoggedIn');
-    if (isLoggedIn === 'true') {
-      showAdminContent();
-    } else {
-      promptLoginModal();
+  function calculateDays() {
+    const start = document.getElementById('startDate').value;
+    const end = document.getElementById('endDate').value;
+    if (start && end) {
+      const d1 = new Date(start);
+      const d2 = new Date(end);
+      if (d2 < d1) {
+        Swal.fire('คำเตือน', 'วันที่เดินทางกลับต้องไม่อยู่ก่อนวันที่ออกเดินทาง', 'warning');
+        document.getElementById('endDate').value = start;
+        document.getElementById('durationDays').value = 1;
+        return;
+      }
+      const diffTime = d2 - d1;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+      document.getElementById('durationDays').value = diffDays > 0 ? diffDays : 1;
     }
   }
 
-  function promptLoginModal() {
-    Swal.fire({
-      title: '🔐 เข้าสู่ระบบผู้ดูแลระบบ',
-      html: `
-        <div class="text-start mb-3">
-          <label class="form-label small fw-bold">ชื่อผู้ใช้งาน (Username):</label>
-          <input type="text" id="loginUsername" class="form-control" placeholder="ระบุ Username">
-        </div>
-        <div class="text-start mb-2">
-          <label class="form-label small fw-bold">รหัสผ่าน (Password):</label>
-          <input type="password" id="loginPassword" class="form-control" placeholder="ระบุ Password">
-        </div>
-      `,
-      icon: 'lock',
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-      confirmButtonText: 'เข้าสู่ระบบ',
-      confirmButtonColor: '#0f172a',
-      focusConfirm: false,
-      preConfirm: () => {
-        const user = document.getElementById('loginUsername').value;
-        const pass = document.getElementById('loginPassword').value;
-        if (!user || !pass) {
-          Swal.showValidationMessage('กรุณากรอก Username และ Password ให้ครบถ้วน');
-          return false;
-        }
-        return { user, pass };
-      }
-    }).then((result) => {
-      if (result.isConfirmed) {
-        if (result.value.user === ADMIN_USER && result.value.pass === ADMIN_PASS) {
-          sessionStorage.setItem('adminIsLoggedIn', 'true');
+  function updateRadioHighlight(element) {
+    const name = element.name;
+    document.querySelectorAll(`input[name="${name}"]`).forEach(input => {
+      input.closest('.custom-card-option')?.classList.remove('has-checked');
+    });
+    if (element.checked) {
+      element.closest('.custom-card-option')?.classList.add('has-checked');
+    }
+  }
+
+  document.getElementById('vehicleRequestForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const btn = document.getElementById('btnSubmit');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>กำลังบันทึกข้อมูล...';
+
+    const formData = new FormData(this);
+    const data = Object.fromEntries(formData.entries());
+
+    if (typeof google !== 'undefined' && google.script && google.script.run) {
+      google.script.run
+        .withSuccessHandler(function(res) {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="bi bi-send-fill me-2"></i> ยื่นคำร้องขอใช้รถยนต์';
+          if(res.success) {
+            Swal.fire({
+              icon: 'success',
+              title: 'ยื่นคำร้องสำเร็จ!',
+              text: 'รหัสคำร้องของคุณคือ: ' + res.requestId,
+              confirmButtonColor: '#1e3a8a'
+            });
+            document.getElementById('vehicleRequestForm').reset();
+            document.querySelectorAll('.custom-card-option').forEach(el => el.classList.remove('has-checked'));
+            document.getElementById('durationDays').value = '';
+          } else {
+            Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาด', text: res.message });
+          }
+        })
+        .withFailureHandler(function(err) {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="bi bi-send-fill me-2"></i> ยื่นคำร้องขอใช้รถยนต์';
+          Swal.fire({ icon: 'error', title: 'System Error', text: err.toString() });
+        })
+        .submitRequest(data);
+    } else {
+      data.action = "submitRequest";
+      fetch(GAS_WEBAPP_URL, {
+        method: 'POST',
+        mode: 'cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(res => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-send-fill me-2"></i> ยื่นคำร้องขอใช้รถยนต์';
+        if(res.success) {
           Swal.fire({
             icon: 'success',
-            title: 'เข้าสู่ระบบสำเร็จ',
-            timer: 1200,
-            showConfirmButton: false
-          }).then(() => {
-            showAdminContent();
+            title: 'ยื่นคำร้องสำเร็จ!',
+            text: 'รหัสคำร้องของคุณคือ: ' + res.requestId,
+            confirmButtonColor: '#1e3a8a'
           });
+          document.getElementById('vehicleRequestForm').reset();
+          document.querySelectorAll('.custom-card-option').forEach(el => el.classList.remove('has-checked'));
+          document.getElementById('durationDays').value = '';
         } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'เข้าสู่ระบบไม่สำเร็จ',
-            text: 'Username หรือ Password ไม่ถูกต้อง!',
-            confirmButtonText: 'ลองอีกครั้ง',
-            confirmButtonColor: '#ef4444'
-          }).then(() => {
-            promptLoginModal();
-          });
-        }
-      }
-    });
-  }
-
-  function showAdminContent() {
-    document.getElementById('adminMainContent').style.display = 'block';
-    document.getElementById('btnLogout').style.display = 'inline-block';
-    loadRequests();
-  }
-
-  function logoutAdmin() {
-    Swal.fire({
-      title: 'ยืนยันการออกจากระบบ?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#ef4444',
-      cancelButtonColor: '#64748b',
-      confirmButtonText: 'ออกจากระบบ',
-      cancelButtonText: 'ยกเลิก'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        sessionStorage.removeItem('adminIsLoggedIn');
-        location.reload();
-      }
-    });
-  }
-
-  function loadRequests() {
-    const tbody = document.getElementById('requestTableBody');
-    tbody.innerHTML = `
-      <tr>
-        <td colspan="9" class="text-center py-5 text-muted">
-          <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
-          กำลังดึงข้อมูลคำร้องล่าสุด...
-        </td>
-      </tr>`;
-
-    google.script.run
-      .withSuccessHandler(handleDataReceived)
-      .withFailureHandler(handleError)
-      .getRequests();
-  }
-
-  function handleError(err) {
-    Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาดในการโหลดข้อมูล', text: err.toString() });
-  }
-
-  function handleDataReceived(requests) {
-    rawRequestsData = requests || [];
-    updateStatCards(rawRequestsData);
-    filterRequests();
-  }
-
-  function updateStatCards(data) {
-    document.getElementById('statTotal').innerText = data.length;
-    document.getElementById('statPending').innerText = data.filter(r => r.status === 'รออนุมัติ').length;
-    document.getElementById('statApproved').innerText = data.filter(r => r.status === 'อนุมัติ').length;
-    document.getElementById('statRejected').innerText = data.filter(r => r.status === 'ไม่อนุมัติ').length;
-  }
-
-  function filterStatus(status, btn) {
-    currentStatusFilter = status;
-    document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    filterRequests();
-  }
-
-  function filterRequests() {
-    const searchText = document.getElementById('searchInput').value.toLowerCase().trim();
-
-    let filtered = rawRequestsData.filter(req => {
-      const matchStatus = (currentStatusFilter === 'ALL') || (req.status === currentStatusFilter);
-      const matchSearch = 
-        req.requestId.toLowerCase().includes(searchText) ||
-        req.fullname.toLowerCase().includes(searchText) ||
-        req.department.toLowerCase().includes(searchText) ||
-        req.objective.toLowerCase().includes(searchText);
-
-      return matchStatus && matchSearch;
-    });
-
-    renderTable(filtered);
-  }
-
-  function renderTable(requests) {
-    const tbody = document.getElementById('requestTableBody');
-
-    if(!requests || requests.length === 0) {
-      tbody.innerHTML = `
-        <tr>
-          <td colspan="9" class="text-center py-5 text-muted">
-            <i class="bi bi-inbox fs-2 d-block mb-2 text-secondary"></i>
-            ไม่พบข้อมูลคำร้องขอใช้รถ
-          </td>
-        </tr>`;
-      return;
-    }
-
-    let html = '';
-    [...requests].reverse().forEach(req => {
-      let badgeClass = 'bg-warning text-dark';
-      if (req.status === 'อนุมัติ') badgeClass = 'bg-success text-white';
-      else if (req.status === 'ไม่อนุมัติ') badgeClass = 'bg-danger text-white';
-      else if (req.status === 'เสร็จสิ้น') badgeClass = 'bg-info text-dark';
-
-      html += `
-        <tr>
-          <td class="ps-3">
-            <span class="fw-bold text-primary">${req.requestId}</span>
-            <div class="text-muted small">${req.timestamp || ''}</div>
-          </td>
-          <td><div class="fw-medium">${req.fullname}</div></td>
-          <td><span class="badge bg-light text-dark border">${req.department}</span></td>
-          <td><div class="text-truncate" style="max-width: 180px;" title="${req.objective}">${req.objective}</div></td>
-          <td>
-            <div class="time-box">
-              <div><strong class="text-secondary">ตั้งแต่:</strong> ${req.startDate} ${req.startTime}</div>
-              <div><strong class="text-secondary">ถึง:</strong> ${req.endDate} ${req.endTime}</div>
-            </div>
-          </td>
-          <td><span class="fw-medium">${req.vehicleType}</span></td>
-          <td>${req.driverName ? `<i class="bi bi-person-badge me-1"></i>${req.driverName}` : '<span class="text-muted small">-</span>'}</td>
-          <td><span class="badge badge-status ${badgeClass}">${req.status}</span></td>
-          <td class="text-center pe-3">
-            <div class="btn-group btn-action-group" role="group">
-              <button class="btn btn-warning text-dark d-inline-flex align-items-center gap-1" onclick="openEditModal(${req.rowIndex})">
-                <i class="bi bi-pencil-fill"></i> แก้ไข
-              </button>
-              <button class="btn btn-success d-inline-flex align-items-center gap-1" onclick="approveRequest(${req.rowIndex}, '${req.requestId}', '${req.driverName || ''}')">
-                <i class="bi bi-check-circle-fill"></i> อนุมัติ
-              </button>
-              <button class="btn btn-danger d-inline-flex align-items-center gap-1" onclick="rejectRequest(${req.rowIndex}, '${req.requestId}')">
-                <i class="bi bi-x-circle-fill"></i> ไม่อนุมัติ
-              </button>
-              <button class="btn btn-secondary d-inline-flex align-items-center gap-1" onclick="deleteItem(${req.rowIndex}, '${req.requestId}')">
-                <i class="bi bi-trash-fill"></i> ลบ
-              </button>
-            </div>
-          </td>
-        </tr>
-      `;
-    });
-
-    tbody.innerHTML = html;
-  }
-
-  function openEditModal(rowIndex) {
-    const req = rawRequestsData.find(r => r.rowIndex === rowIndex);
-    if (!req) return;
-
-    document.getElementById('editRowIndex').value = req.rowIndex;
-    document.getElementById('editRequestIdDisplay').innerText = `(${req.requestId})`;
-    document.getElementById('editFullname').value = req.fullname;
-    document.getElementById('editDepartment').value = req.department;
-    document.getElementById('editObjective').value = req.objective;
-    
-    document.getElementById('editStartDate').value = formatDateForInput(req.startDate);
-    document.getElementById('editStartTime').value = req.startTime;
-    document.getElementById('editEndDate').value = formatDateForInput(req.endDate);
-    document.getElementById('editEndTime').value = req.endTime;
-    
-    document.getElementById('editVehicleType').value = req.vehicleType || 'รถตู้';
-    document.getElementById('editDriverName').value = req.driverName || '';
-    document.getElementById('editStatus').value = req.status || 'รออนุมัติ';
-
-    editModalObj.show();
-  }
-
-  function formatDateForInput(dateStr) {
-    if(!dateStr) return '';
-    if(dateStr.includes('/')) {
-      const parts = dateStr.split('/');
-      if(parts.length === 3) return `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
-    }
-    return dateStr;
-  }
-
-  function saveEditedData() {
-    const data = {
-      rowIndex: document.getElementById('editRowIndex').value,
-      fullname: document.getElementById('editFullname').value,
-      department: document.getElementById('editDepartment').value,
-      objective: document.getElementById('editObjective').value,
-      startDate: document.getElementById('editStartDate').value,
-      startTime: document.getElementById('editStartTime').value,
-      endDate: document.getElementById('editEndDate').value,
-      endTime: document.getElementById('editEndTime').value,
-      vehicleType: document.getElementById('editVehicleType').value,
-      driverName: document.getElementById('editDriverName').value,
-      status: document.getElementById('editStatus').value
-    };
-
-    if(!data.fullname || !data.department || !data.objective) {
-      Swal.fire('คำเตือน', 'กรุณากรอกข้อมูลสำคัญให้ครบถ้วน', 'warning');
-      return;
-    }
-
-    Swal.showLoading();
-    google.script.run
-      .withSuccessHandler(function(res) {
-        editModalObj.hide();
-        if(res.success) {
-          Swal.fire({ icon: 'success', title: 'บันทึกการแก้ไขเรียบร้อย!', timer: 1500, showConfirmButton: false });
-          loadRequests();
-        } else {
-          Swal.fire('เกิดข้อผิดพลาด', res.message, 'error');
+          Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาด', text: res.message });
         }
       })
-      .updateRequestDetail(data);
-  }
-
-  function approveRequest(rowIndex, requestId, currentDriver) {
-    Swal.fire({
-      title: 'อนุมัติคำร้อง ' + requestId,
-      html: `
-        <div class="text-start mb-3">
-          <label class="form-label small fw-bold mb-1">ผู้รับผิดชอบขับรถ (คนขับ):</label>
-          <input id="swalDriverName" class="form-control" placeholder="ระบุชื่อคนขับรถ..." value="${currentDriver}">
-        </div>
-        <div class="text-start">
-          <label class="form-label small fw-bold mb-1">ชื่อผู้อนุมัติ (แอดมิน):</label>
-          <input id="swalAdminName" class="form-control" placeholder="ชื่อแอดมิน" value="แอดมิน">
-        </div>
-      `,
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#10b981',
-      cancelButtonColor: '#64748b',
-      confirmButtonText: 'ยืนยันอนุมัติ',
-      cancelButtonText: 'ยกเลิก',
-      focusConfirm: false,
-      preConfirm: () => {
-        return {
-          driverName: document.getElementById('swalDriverName').value,
-          adminName: document.getElementById('swalAdminName').value
-        }
-      }
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const { driverName, adminName } = result.value;
-        Swal.showLoading();
-        google.script.run
-          .withSuccessHandler(function(res) {
-            if(res.success) {
-              Swal.fire({ icon: 'success', title: 'อนุมัติสำเร็จ!', text: 'ระบบส่งแจ้งเตือนผ่าน LINE เรียบร้อยแล้ว', timer: 1800, showConfirmButton: false });
-              loadRequests();
-            } else {
-              Swal.fire('เกิดข้อผิดพลาด', res.message, 'error');
-            }
-          })
-          .updateAdminApproval(rowIndex, 'อนุมัติ', driverName, adminName || 'แอดมิน');
-      }
-    });
-  }
-
-  function rejectRequest(rowIndex, requestId) {
-    Swal.fire({
-      title: 'ยืนยันไม่อนุมัติคำร้อง?',
-      text: 'รหัสคำร้อง: ' + requestId,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#ef4444',
-      cancelButtonColor: '#64748b',
-      confirmButtonText: 'ไม่อนุมัติ',
-      cancelButtonText: 'ยกเลิก'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.showLoading();
-        google.script.run
-          .withSuccessHandler(function(res) {
-            if(res.success) {
-              Swal.fire({ icon: 'info', title: 'ไม่อนุมัติคำร้องเรียบร้อย', timer: 1800, showConfirmButton: false });
-              loadRequests();
-            } else {
-              Swal.fire('เกิดข้อผิดพลาด', res.message, 'error');
-            }
-          })
-          .updateAdminApproval(rowIndex, 'ไม่อนุมัติ', '', 'แอดมิน');
-      }
-    });
-  }
-
-  function deleteItem(rowIndex, requestId) {
-    Swal.fire({
-      title: 'ยืนยันการลบข้อมูล?',
-      text: 'รหัสคำร้อง ' + requestId + ' จะถูกลบถาวรออกจาก Google Sheet',
-      icon: 'error',
-      showCancelButton: true,
-      confirmButtonColor: '#64748b',
-      cancelButtonColor: '#334155',
-      confirmButtonText: 'ยืนยันลบ',
-      cancelButtonText: 'ยกเลิก'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.showLoading();
-        google.script.run
-          .withSuccessHandler(function(res) {
-            if(res.success) {
-              Swal.fire({ icon: 'success', title: 'ลบข้อมูลเรียบร้อยแล้ว', timer: 1500, showConfirmButton: false });
-              loadRequests();
-            } else {
-              Swal.fire('เกิดข้อผิดพลาด', res.message, 'error');
-            }
-          })
-          .deleteRequest(rowIndex);
-      }
-    });
-  }
+      .catch(err => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-send-fill me-2"></i> ยื่นคำร้องขอใช้รถยนต์';
+        Swal.fire({ icon: 'error', title: 'System Error', text: err.toString() });
+      });
+    }
+  });
 </script>
 </body>
 </html>
