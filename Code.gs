@@ -20,6 +20,15 @@ function getTargetSheet() {
 }
 
 function doGet(e) {
+  // รองรับการเรียกข้อมูลดึงรายการคำร้องผ่าน fetch (สำหรับ Vercel)
+  if (e && e.parameter && e.parameter.action === 'getRequests') {
+    const data = getRequests();
+    return ContentService
+      .createTextOutput(JSON.stringify(data))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  // การเปิดหน้าเว็บปกติบน Google Apps Script
   const page = e && e.parameter.p ? e.parameter.p.toLowerCase() : 'form';
   let htmlName = 'Form';
   
