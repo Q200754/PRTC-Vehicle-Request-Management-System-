@@ -379,6 +379,32 @@
     switchView('viewForm');
   }
 
+  // 📥 ฟังก์ชันส่ง Request ไปยัง GAS API (รองรับ Vercel)
+  function callApi(payload, callback) {
+    if (typeof google !== 'undefined' && google.script && google.script.run) {
+      // เปิดบน Google Apps Script
+      if (payload.action === 'updateAdminApproval') {
+        google.script.run.withSuccessHandler(callback).updateAdminApproval(payload.rowIndex, payload.status, payload.driverName, payload.adminName);
+      } else if (payload.action === 'updateRequestDetail') {
+        google.script.run.withSuccessHandler(callback).updateRequestDetail(payload.data);
+      } else if (payload.action === 'deleteRequest') {
+        google.script.run.withSuccessHandler(callback).deleteRequest(payload.rowIndex);
+      }
+    } else {
+      // เปิดบน Vercel (ผ่าน fetch)
+      fetch(GAS_WEBAPP_URL, {
+        method: 'POST',
+        mode: 'cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(res => callback(res))
+      .catch(err => Swal.fire('เกิดข้อผิดพลาด', err.toString(), 'error'));
+    }
+  }
+
+  // 📥 ดึงข้อมูลคำร้อง
   function loadAdminData() {
     const tbody = document.getElementById('adminTableBody');
     tbody.innerHTML = `<tr><td colspan="9" class="text-center py-5 text-muted"><div class="spinner-border spinner-border-sm text-primary me-2"></div>กำลังดึงข้อมูลล่าสุด...</td></tr>`;
@@ -396,7 +422,7 @@
     }
   }
 
-  // 🎯 เรนเดอร์สร้างปุ่ม อนุมัติ / ไม่อนุมัติ / แก้ไข / ลบ ให้ขึ้นครบ 100%
+  // 📊 เรนเดอร์สร้างปุ่มจัดการ
   function renderAdminTable(requests) {
     rawRequestsData = requests || [];
     const tbody = document.getElementById('adminTableBody');
@@ -447,6 +473,7 @@
     tbody.innerHTML = html;
   }
 
+  // 1. ปุ่มอนุมัติ
   function approveRequest(rowIndex, requestId, currentDriver) {
     Swal.fire({
       title: 'อนุมัติคำร้อง ' + requestId,
@@ -477,20 +504,23 @@
       if (result.isConfirmed) {
         const { driverName, adminName } = result.value;
         Swal.showLoading();
-        if (typeof google !== 'undefined' && google.script && google.script.run) {
-          google.script.run
-            .withSuccessHandler(function(res) {
-              if(res.success) {
-                Swal.fire('สำเร็จ', 'อนุมัติคำร้องเรียบร้อยแล้ว', 'success');
-                loadAdminData();
-              } else { Swal.fire('ผิดพลาด', res.message, 'error'); }
-            })
-            .updateAdminApproval(rowIndex, 'อนุมัติ', driverName, adminName || 'แอดมิน');
-        }
+        callApi({
+          action: 'updateAdminApproval',
+          rowIndex: rowIndex,
+          status: 'อนุมัติ',
+          driverName: driverName,
+          adminName: adminName || 'แอดมิน'
+        }, function(res) {
+          if(res.success) {
+            Swal.fire('สำเร็จ', 'อนุมัติคำร้องเรียบร้อยแล้ว', 'success');
+            loadAdminData();
+          } else { Swal.fire('ผิดพลาด', res.message, 'error'); }
+        });
       }
     });
   }
 
+  // 2. ปุ่มไม่อนุมัติ
   function rejectRequest(rowIndex, requestId) {
     Swal.fire({
       title: 'ยืนยันไม่อนุมัติคำร้อง?',
@@ -504,20 +534,23 @@
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.showLoading();
-        if (typeof google !== 'undefined' && google.script && google.script.run) {
-          google.script.run
-            .withSuccessHandler(function(res) {
-              if(res.success) {
-                Swal.fire('เรียบร้อย', 'ปรับสถานะเป็นไม่อนุมัติเรียบร้อย', 'info');
-                loadAdminData();
-              } else { Swal.fire('ผิดพลาด', res.message, 'error'); }
-            })
-            .updateAdminApproval(rowIndex, 'ไม่อนุมัติ', '', 'แอดมิน');
-        }
+        callApi({
+          action: 'updateAdminApproval',
+          rowIndex: rowIndex,
+          status: 'ไม่อนุมัติ',
+          driverName: '',
+          adminName: 'แอดมิน'
+        }, function(res) {
+          if(res.success) {
+            Swal.fire('เรียบร้อย', 'ปรับสถานะเป็นไม่อนุมัติเรียบร้อย', 'info');
+            loadAdminData();
+          } else { Swal.fire('ผิดพลาด', res.message, 'error'); }
+        });
       }
     });
   }
 
+  // 3. ปุ่มแก้ไข (เปิด Modal)
   function openEditModal(rowIndex) {
     const req = rawRequestsData.find(r => r.rowIndex === rowIndex);
     if (!req) return;
@@ -563,19 +596,19 @@
     };
 
     Swal.showLoading();
-    if (typeof google !== 'undefined' && google.script && google.script.run) {
-      google.script.run
-        .withSuccessHandler(function(res) {
-          editModalObj.hide();
-          if(res.success) {
-            Swal.fire('สำเร็จ', 'บันทึกการแก้ไขเรียบร้อย!', 'success');
-            loadAdminData();
-          } else { Swal.fire('เกิดข้อผิดพลาด', res.message, 'error'); }
-        })
-        .updateRequestDetail(data);
-    }
+    callApi({
+      action: 'updateRequestDetail',
+      data: data
+    }, function(res) {
+      editModalObj.hide();
+      if(res.success) {
+        Swal.fire('สำเร็จ', 'บันทึกการแก้ไขเรียบร้อย!', 'success');
+        loadAdminData();
+      } else { Swal.fire('เกิดข้อผิดพลาด', res.message, 'error'); }
+    });
   }
 
+  // 4. ปุ่มลบ
   function deleteItem(rowIndex, requestId) {
     Swal.fire({
       title: 'ยืนยันการลบข้อมูล?',
@@ -589,16 +622,15 @@
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.showLoading();
-        if (typeof google !== 'undefined' && google.script && google.script.run) {
-          google.script.run
-            .withSuccessHandler(function(res) {
-              if(res.success) {
-                Swal.fire('สำเร็จ', 'ลบข้อมูลเรียบร้อยแล้ว', 'success');
-                loadAdminData();
-              } else { Swal.fire('เกิดข้อผิดพลาด', res.message, 'error'); }
-            })
-            .deleteRequest(rowIndex);
-        }
+        callApi({
+          action: 'deleteRequest',
+          rowIndex: rowIndex
+        }, function(res) {
+          if(res.success) {
+            Swal.fire('สำเร็จ', 'ลบข้อมูลเรียบร้อยแล้ว', 'success');
+            loadAdminData();
+          } else { Swal.fire('เกิดข้อผิดพลาด', res.message, 'error'); }
+        });
       }
     });
   }
