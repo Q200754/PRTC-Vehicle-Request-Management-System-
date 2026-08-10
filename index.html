@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>วิทยาลัยเทคโนโลยีพระมหาไถ่ พัทยา | ยื่นคำร้องขอใช้รถ</title>
+  <title>วิทยาลัยเทคโนโลยีพระมหาไถ่ พัทยา | PRTC-VRMS</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
@@ -14,263 +14,274 @@
       --bg-color: #f8fafc;
       --card-border: #e2e8f0;
     }
-    body {
-      font-family: 'Sarabun', sans-serif;
-      background-color: var(--bg-color);
-      color: #334155;
-    }
+    body { font-family: 'Sarabun', sans-serif; background-color: var(--bg-color); color: #334155; }
+    
+    .view-section { display: none; }
+    .view-section.active { display: block; }
+
     .form-container {
-      max-width: 880px;
-      margin: 30px auto;
-      background: #ffffff;
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-      padding: 40px;
-      border-top: 6px solid var(--primary-color);
+      max-width: 880px; margin: 30px auto; background: #ffffff;
+      border-radius: 16px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      padding: 40px; border-top: 6px solid var(--primary-color);
     }
-    .form-header {
-      text-align: center;
-      margin-bottom: 30px;
-      border-bottom: 2px solid #f1f5f9;
-      padding-bottom: 20px;
-    }
-    .form-header h4 {
-      font-weight: 700;
-      color: var(--primary-color);
-      margin-bottom: 6px;
-    }
-    .nav-btn-group .btn {
-      border-radius: 20px;
-      font-weight: 600;
-      padding: 6px 16px;
-      transition: all 0.2s ease;
-    }
-    .section-title {
-      font-weight: 700;
-      color: #0f172a;
-      font-size: 1.05rem;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .custom-card-option {
-      border: 2px solid var(--card-border);
-      border-radius: 12px;
-      padding: 12px 16px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      background-color: #ffffff;
-    }
-    .custom-card-option:hover {
-      border-color: #93c5fd;
-      background-color: #f0f9ff;
-    }
-    .form-check-input:checked + .custom-card-label {
-      font-weight: 600;
-      color: var(--primary-color);
-    }
-    .has-checked {
-      border-color: var(--primary-color) !important;
-      background-color: #eff6ff !important;
-    }
-    .btn-submit {
-      background-color: var(--primary-color);
-      border: none;
-      font-weight: 700;
-      font-size: 1.1rem;
-      border-radius: 10px;
-      padding: 14px;
-      transition: all 0.2s ease;
-    }
-    .btn-submit:hover {
-      background-color: var(--primary-hover);
-    }
-    @media (max-width: 576px) {
-      .form-container { padding: 24px 18px; margin: 15px auto; }
-    }
+    .form-header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #f1f5f9; padding-bottom: 20px; }
+    .form-header h4 { font-weight: 700; color: var(--primary-color); margin-bottom: 6px; }
+    .nav-btn-group .btn { border-radius: 20px; font-weight: 600; padding: 6px 16px; }
+    
+    .section-title { font-weight: 700; color: #0f172a; font-size: 1.05rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .custom-card-option { border: 2px solid var(--card-border); border-radius: 12px; padding: 12px 16px; cursor: pointer; background: #fff; }
+    .custom-card-option.has-checked { border-color: var(--primary-color) !important; background-color: #eff6ff !important; }
+    .btn-submit { background-color: var(--primary-color); border: none; font-weight: 700; font-size: 1.1rem; border-radius: 10px; padding: 14px; }
+    
+    .navbar-admin { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
+    .stat-card { border: none; border-radius: 14px; }
+    .table-card { border: none; border-radius: 14px; background: #ffffff; }
+    .badge-status { font-size: 0.8rem; padding: 6px 14px; border-radius: 20px; font-weight: 600; }
   </style>
 </head>
 <body>
 
-<div class="container py-2">
-  <div class="form-container">
-    
-    <!-- Dynamic Navigation Buttons -->
-    <div class="d-flex justify-content-end gap-2 nav-btn-group mb-3">
-      <button onclick="navigateTo('driver')" class="btn btn-outline-success btn-sm">
-        <i class="bi bi-speedometer2 me-1"></i> สำหรับคนขับ
-      </button>
-      <button onclick="navigateTo('admin')" class="btn btn-outline-secondary btn-sm">
-        <i class="bi bi-shield-lock-fill me-1"></i> ระบบแอดมิน
-      </button>
-    </div>
-
-    <!-- Header Title -->
-    <div class="form-header">
-      <h4>วิทยาลัยเทคโนโลยีพระมหาไถ่ พัทยา</h4>
-      <h5 class="text-muted fw-normal fs-6">แบบยื่นคำร้องขอใช้รถยนต์สถาบัน</h5>
-    </div>
-
-    <form id="vehicleRequestForm">
+<!-- ========================================== -->
+<!-- VIEW 1: หน้าฟอร์มยื่นคำร้อง (USER FORM) -->
+<!-- ========================================== -->
+<div id="viewForm" class="view-section active">
+  <div class="container py-2">
+    <div class="form-container">
       
-      <!-- 1. ข้อมูลผู้ขอใช้ -->
-      <div class="mb-4">
-        <div class="section-title"><i class="bi bi-person-circle text-primary"></i> ๑. ข้อมูลผู้ยื่นคำร้อง</div>
-        <div class="row g-3">
-          <div class="col-md-7">
-            <label class="form-label small fw-bold">ชื่อ-นามสกุล ผู้ขอใช้ <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" name="fullname" required placeholder="ระบุชื่อ-นามสกุล">
-          </div>
-          <div class="col-md-5">
-            <label class="form-label small fw-bold">ฝ่าย / แผนก <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" name="department" required placeholder="เช่น เทคโนโลยีสารสนเทศ">
-          </div>
-          <div class="col-12">
-            <label class="form-label small fw-bold">วัตถุประสงค์การใช้งาน <span class="text-danger">*</span></label>
-            <textarea class="form-control" name="objective" rows="2" required placeholder="ระบุรายละเอียดวัตถุประสงค์การเดินทาง"></textarea>
-          </div>
-        </div>
+      <!-- ปุ่มสลับหน้า -->
+      <div class="d-flex justify-content-end gap-2 nav-btn-group mb-3">
+        <button type="button" onclick="switchView('viewDriver')" class="btn btn-outline-success btn-sm">
+          <i class="bi bi-speedometer2 me-1"></i> สำหรับคนขับ
+        </button>
+        <button type="button" onclick="switchView('viewAdmin')" class="btn btn-outline-secondary btn-sm">
+          <i class="bi bi-shield-lock-fill me-1"></i> ระบบแอดมิน
+        </button>
       </div>
 
-      <!-- 2. กำหนดการเดินทาง -->
-      <div class="mb-4">
-        <div class="section-title"><i class="bi bi-calendar-event text-primary"></i> ๒. กำหนดการเดินทาง</div>
-        <div class="row g-3">
-          <div class="col-md-6">
-            <div class="p-3 border rounded-3 bg-light">
-              <span class="fw-bold text-dark d-block mb-2 small"><i class="bi bi-box-arrow-up-right me-1 text-primary"></i> ออกเดินทาง</span>
-              <div class="row g-2">
-                <div class="col-7">
-                  <label class="small text-muted">วันที่</label>
-                  <input type="date" class="form-control" name="startDate" id="startDate" required onchange="calculateDays()">
-                </div>
-                <div class="col-5">
-                  <label class="small text-muted">เวลา</label>
-                  <input type="time" class="form-control" name="startTime" required>
-                </div>
-              </div>
+      <div class="form-header">
+        <h4>วิทยาลัยเทคโนโลยีพระมหาไถ่ พัทยา</h4>
+        <h5 class="text-muted fw-normal fs-6">แบบยื่นคำร้องขอใช้รถยนต์สถาบัน</h5>
+      </div>
+
+      <form id="vehicleRequestForm">
+        <div class="mb-4">
+          <div class="section-title"><i class="bi bi-person-circle text-primary"></i> ๑. ข้อมูลผู้ยื่นคำร้อง</div>
+          <div class="row g-3">
+            <div class="col-md-7">
+              <label class="form-label small fw-bold">ชื่อ-นามสกุล ผู้ขอใช้ <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" name="fullname" required placeholder="ระบุชื่อ-นามสกุล">
+            </div>
+            <div class="col-md-5">
+              <label class="form-label small fw-bold">ฝ่าย / แผนก <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" name="department" required placeholder="เช่น เทคโนโลยีสารสนเทศ">
+            </div>
+            <div class="col-12">
+              <label class="form-label small fw-bold">วัตถุประสงค์การใช้งาน <span class="text-danger">*</span></label>
+              <textarea class="form-control" name="objective" rows="2" required placeholder="ระบุรายละเอียดวัตถุประสงค์การเดินทาง"></textarea>
             </div>
           </div>
+        </div>
 
-          <div class="col-md-6">
-            <div class="p-3 border rounded-3 bg-light">
-              <span class="fw-bold text-dark d-block mb-2 small"><i class="bi bi-box-arrow-in-down-left me-1 text-success"></i> เดินทางกลับ</span>
-              <div class="row g-2">
-                <div class="col-7">
-                  <label class="small text-muted">วันที่</label>
-                  <input type="date" class="form-control" name="endDate" id="endDate" required onchange="calculateDays()">
-                </div>
-                <div class="col-5">
-                  <label class="small text-muted">เวลา</label>
-                  <input type="time" class="form-control" name="endTime" required>
+        <div class="mb-4">
+          <div class="section-title"><i class="bi bi-calendar-event text-primary"></i> ๒. กำหนดการเดินทาง</div>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="p-3 border rounded-3 bg-light">
+                <span class="fw-bold text-dark d-block mb-2 small"><i class="bi bi-box-arrow-up-right me-1 text-primary"></i> ออกเดินทาง</span>
+                <div class="row g-2">
+                  <div class="col-7"><label class="small text-muted">วันที่</label><input type="date" class="form-control" name="startDate" id="startDate" required onchange="calculateDays()"></div>
+                  <div class="col-5"><label class="small text-muted">เวลา</label><input type="time" class="form-control" name="startTime" required></div>
                 </div>
               </div>
             </div>
-          </div>
-
-          <div class="col-12">
-            <div class="input-group">
-              <span class="input-group-text bg-white fw-bold text-secondary">รวมระยะเวลาเดินทาง</span>
-              <input type="number" class="form-control text-center fw-bold text-primary fs-5" name="durationDays" id="durationDays" placeholder="0" readonly>
-              <span class="input-group-text bg-white fw-bold text-secondary">วัน</span>
+            <div class="col-md-6">
+              <div class="p-3 border rounded-3 bg-light">
+                <span class="fw-bold text-dark d-block mb-2 small"><i class="bi bi-box-arrow-in-down-left me-1 text-success"></i> เดินทางกลับ</span>
+                <div class="row g-2">
+                  <div class="col-7"><label class="small text-muted">วันที่</label><input type="date" class="form-control" name="endDate" id="endDate" required onchange="calculateDays()"></div>
+                  <div class="col-5"><label class="small text-muted">เวลา</label><input type="time" class="form-control" name="endTime" required></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="input-group">
+                <span class="input-group-text bg-white fw-bold text-secondary">รวมระยะเวลาเดินทาง</span>
+                <input type="number" class="form-control text-center fw-bold text-primary fs-5" name="durationDays" id="durationDays" placeholder="0" readonly>
+                <span class="input-group-text bg-white fw-bold text-secondary">วัน</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- 3. รายละเอียดการรับส่ง & ผู้ร่วมเดินทาง -->
-      <div class="mb-4">
-        <div class="section-title"><i class="bi bi-geo-alt text-primary"></i> ๓. การรับ-ส่ง และ จำนวนผู้ร่วมเดินทาง</div>
-        <div class="row g-3">
-          <div class="col-md-8">
-            <label class="form-label small fw-bold">ลักษณะการรับ-ส่ง <span class="text-danger">*</span></label>
-            <div class="d-flex flex-wrap gap-2">
-              <label class="custom-card-option flex-fill">
-                <input class="form-check-input me-1" type="radio" name="tripType" value="ไปส่งเท่านั้น" required onchange="updateRadioHighlight(this)">
-                <span class="custom-card-label small">ไปส่งเท่านั้น</span>
-              </label>
-              <label class="custom-card-option flex-fill">
-                <input class="form-check-input me-1" type="radio" name="tripType" value="รับกลับเท่านั้น" onchange="updateRadioHighlight(this)">
-                <span class="custom-card-label small">รับกลับเท่านั้น</span>
-              </label>
-              <label class="custom-card-option flex-fill">
-                <input class="form-check-input me-1" type="radio" name="tripType" value="ไปส่งและรอรับกลับ" onchange="updateRadioHighlight(this)">
-                <span class="custom-card-label small">รอรับกลับ</span>
-              </label>
+        <div class="mb-4">
+          <div class="section-title"><i class="bi bi-geo-alt text-primary"></i> ๓. การรับ-ส่ง และ จำนวนผู้ร่วมเดินทาง</div>
+          <div class="row g-3">
+            <div class="col-md-8">
+              <label class="form-label small fw-bold">ลักษณะการรับ-ส่ง <span class="text-danger">*</span></label>
+              <div class="d-flex flex-wrap gap-2">
+                <label class="custom-card-option flex-fill"><input class="form-check-input me-1" type="radio" name="tripType" value="ไปส่งเท่านั้น" required onchange="updateRadioHighlight(this)"><span class="small">ไปส่งเท่านั้น</span></label>
+                <label class="custom-card-option flex-fill"><input class="form-check-input me-1" type="radio" name="tripType" value="รับกลับเท่านั้น" onchange="updateRadioHighlight(this)"><span class="small">รับกลับเท่านั้น</span></label>
+                <label class="custom-card-option flex-fill"><input class="form-check-input me-1" type="radio" name="tripType" value="ไปส่งและรอรับกลับ" onchange="updateRadioHighlight(this)"><span class="small">รอรับกลับ</span></label>
+              </div>
             </div>
-          </div>
-
-          <div class="col-md-4">
-            <label class="form-label small fw-bold">ผู้ร่วมเดินทาง <span class="text-danger">*</span></label>
-            <div class="input-group">
-              <input type="number" class="form-control" name="passengerCount" min="1" value="1" required>
-              <span class="input-group-text bg-white">คน</span>
+            <div class="col-md-4">
+              <label class="form-label small fw-bold">ผู้ร่วมเดินทาง <span class="text-danger">*</span></label>
+              <div class="input-group"><input type="number" class="form-control" name="passengerCount" min="1" value="1" required><span class="input-group-text bg-white">คน</span></div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- 4. ตัวเลือกรถ & ผู้ขับ -->
-      <div class="mb-4">
-        <div class="section-title"><i class="bi bi-truck text-primary"></i> ๔. ยานพาหนะ และ กิจกรรม</div>
-        <div class="row g-3">
-          <div class="col-md-12">
-            <label class="form-label small fw-bold">ประเภทรถที่ต้องการใช้ <span class="text-danger">*</span></label>
-            <div class="d-flex flex-wrap gap-2">
-              <label class="custom-card-option flex-fill text-center">
-                <input class="form-check-input me-1" type="radio" name="vehicleType" value="รถตู้" required onchange="updateRadioHighlight(this)">
-                <span class="custom-card-label"><i class="bi bi-bus-front me-1"></i> รถตู้</span>
-              </label>
-              <label class="custom-card-option flex-fill text-center">
-                <input class="form-check-input me-1" type="radio" name="vehicleType" value="รถกระบะ" onchange="updateRadioHighlight(this)">
-                <span class="custom-card-label"><i class="bi bi-truck me-1"></i> รถกระบะ</span>
-              </label>
-              <label class="custom-card-option flex-fill text-center">
-                <input class="form-check-input me-1" type="radio" name="vehicleType" value="รถบัส" onchange="updateRadioHighlight(this)">
-                <span class="custom-card-label"><i class="bi bi-terminal me-1"></i> รถบัส</span>
-              </label>
+        <div class="mb-4">
+          <div class="section-title"><i class="bi bi-truck text-primary"></i> ๔. ยานพาหนะ และ กิจกรรม</div>
+          <div class="row g-3">
+            <div class="col-md-12">
+              <label class="form-label small fw-bold">ประเภทรถที่ต้องการใช้ <span class="text-danger">*</span></label>
+              <div class="d-flex flex-wrap gap-2">
+                <label class="custom-card-option flex-fill text-center"><input class="form-check-input me-1" type="radio" name="vehicleType" value="รถตู้" required onchange="updateRadioHighlight(this)"> รถตู้</label>
+                <label class="custom-card-option flex-fill text-center"><input class="form-check-input me-1" type="radio" name="vehicleType" value="รถกระบะ" onchange="updateRadioHighlight(this)"> รถกระบะ</label>
+                <label class="custom-card-option flex-fill text-center"><input class="form-check-input me-1" type="radio" name="vehicleType" value="รถบัส" onchange="updateRadioHighlight(this)"> รถบัส</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-bold">ผู้รับผิดชอบในการขับรถ <small class="text-muted">(ถ้ามีระบุ)</small></label>
+              <input type="text" class="form-control" name="driverName" placeholder="ระบุชื่อผู้ขับรถ">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-bold">ประเภทกิจกรรม <span class="text-danger">*</span></label>
+              <select class="form-select" name="activity" required>
+                <option value="" selected disabled>-- เลือกกิจกรรม --</option>
+                <option value="งานโรงเรียน">งานโรงเรียน</option>
+                <option value="งานกิจกรรมอื่น ๆ">งานกิจกรรมอื่น ๆ</option>
+                <option value="งานส่วนตัว">งานส่วนตัว</option>
+              </select>
             </div>
           </div>
-
-          <div class="col-md-6">
-            <label class="form-label small fw-bold">ผู้รับผิดชอบในการขับรถ <small class="text-muted">(ถ้ามีระบุ)</small></label>
-            <input type="text" class="form-control" name="driverName" placeholder="ระบุชื่อผู้ขับรถ">
-          </div>
-
-          <div class="col-md-6">
-            <label class="form-label small fw-bold">ประเภทกิจกรรม <span class="text-danger">*</span></label>
-            <select class="form-select" name="activity" required>
-              <option value="" selected disabled>-- เลือกกิจกรรม --</option>
-              <option value="งานโรงเรียน">งานโรงเรียน</option>
-              <option value="งานกิจกรรมอื่น ๆ">งานกิจกรรมอื่น ๆ</option>
-              <option value="งานส่วนตัว">งานส่วนตัว</option>
-            </select>
-          </div>
         </div>
-      </div>
 
-      <!-- Submit Button -->
-      <button type="submit" id="btnSubmit" class="btn btn-primary btn-submit w-100 shadow-sm mt-3">
-        <i class="bi bi-send-fill me-2"></i> ยื่นคำร้องขอใช้รถยนต์
-      </button>
-
-    </form>
+        <button type="submit" id="btnSubmit" class="btn btn-primary btn-submit w-100 shadow-sm text-white"><i class="bi bi-send-fill me-2"></i> ยื่นคำร้องขอใช้รถยนต์</button>
+      </form>
+    </div>
   </div>
 </div>
 
+<!-- ========================================== -->
+<!-- VIEW 2: หน้าแผงควบคุมแอดมิน (ADMIN PANEL) -->
+<!-- ========================================== -->
+<div id="viewAdmin" class="view-section">
+  <nav class="navbar navbar-dark navbar-admin mb-4 py-3">
+    <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center gap-2">
+        <button type="button" onclick="switchView('viewForm')" class="btn btn-outline-light btn-sm rounded-pill px-3"><i class="bi bi-arrow-left me-1"></i> หน้าหลัก</button>
+        <button type="button" onclick="switchView('viewDriver')" class="btn btn-outline-success btn-sm rounded-pill px-3 text-white border-success"><i class="bi bi-speedometer2 me-1"></i> หน้าคนขับ</button>
+        <span class="navbar-brand mb-0 h5 fw-bold d-flex align-items-center ms-2"><i class="bi bi-shield-check me-2 text-warning fs-4"></i> Admin Panel</span>
+      </div>
+      <button id="btnLogout" class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="logoutAdmin()"><i class="bi bi-box-arrow-right me-1"></i> ออกจากระบบ</button>
+    </div>
+  </nav>
+
+  <div class="container-fluid px-4 mb-5">
+    <div class="card table-card p-3 mb-4 shadow-sm">
+      <div class="d-flex justify-content-between align-items-center">
+        <h5 class="fw-bold m-0"><i class="bi bi-list-task me-2"></i>รายการคำร้องขอใช้รถทั้งหมด</h5>
+        <button class="btn btn-primary btn-sm px-3" onclick="loadAdminData()"><i class="bi bi-arrow-clockwise me-1"></i> รีเฟรช</button>
+      </div>
+    </div>
+    <div class="card table-card overflow-hidden shadow-sm">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th class="ps-3">Request ID</th><th>ผู้ยื่นคำร้อง</th><th>ฝ่าย</th><th>วัตถุประสงค์</th><th>วัน-เวลา เดินทาง</th><th>รถที่ขอ</th><th>คนขับ</th><th>สถานะ</th>
+            </tr>
+          </thead>
+          <tbody id="adminTableBody">
+            <tr><td colspan="8" class="text-center py-5 text-muted">กดปุ่มรีเฟรชเพื่อดึงข้อมูล...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- VIEW 3: หน้าบันทึกสำหรับคนขับ (DRIVER) -->
+<!-- ========================================== -->
+<div id="viewDriver" class="view-section">
+  <div class="container py-4">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="mb-3 d-flex gap-2">
+          <button type="button" onclick="switchView('viewForm')" class="btn btn-outline-secondary btn-sm rounded-pill px-3"><i class="bi bi-arrow-left me-1"></i> ย้อนกลับหน้าหลัก</button>
+          <button type="button" onclick="switchView('viewAdmin')" class="btn btn-outline-primary btn-sm rounded-pill px-3"><i class="bi bi-shield-lock-fill me-1"></i> ระบบแอดมิน</button>
+        </div>
+        <div class="card p-4 bg-white shadow-sm border-0 border-top border-success border-4 rounded-3">
+          <h4 class="text-success mb-3 fw-bold"><i class="bi bi-speedometer2 me-2"></i>บันทึกระยะทางและค่าน้ำมัน (คนขับ)</h4>
+          <p class="text-muted">ระบบบันทึกไมล์และค่าน้ำมันสำหรับพนักงานขับรถ</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
   const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwszE9zY8keM6n0YL-yXRKpfurNfxwxPGClM98Y7C8xiIQQQXppF605e54l2XEUDYLq/exec";
+  const ADMIN_USER = "piangfah.admin";
+  const ADMIN_PASS = "Prtc@2026";
 
-  // 🔄 Dynamic Navigation System
-  function navigateTo(page) {
-    const baseUrl = window.location.href.split('?')[0];
-    if (page === 'home') {
-      window.top.location.href = baseUrl;
-    } else {
-      window.top.location.href = baseUrl + '?p=' + page;
+  // 🔄 ฟังก์ชันสลับหน้าภายในไฟล์เดียว (ไม่ต้องโหลด URL ใหม่ ไม่หลุด 404)
+  function switchView(viewId) {
+    if (viewId === 'viewAdmin') {
+      const isLoggedIn = sessionStorage.getItem('adminIsLoggedIn');
+      if (isLoggedIn !== 'true') {
+        promptLoginModal();
+        return;
+      }
     }
+    document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
+    document.getElementById(viewId).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function promptLoginModal() {
+    Swal.fire({
+      title: '🔐 เข้าสู่ระบบ Admin',
+      html: `
+        <div class="text-start mb-3">
+          <label class="form-label small fw-bold mb-1">Username:</label>
+          <input type="text" id="loginUsername" class="form-control" placeholder="Username">
+        </div>
+        <div class="text-start mb-2">
+          <label class="form-label small fw-bold mb-1">Password:</label>
+          <input type="password" id="loginPassword" class="form-control" placeholder="Password">
+        </div>`,
+      icon: 'lock',
+      showCancelButton: true,
+      confirmButtonText: 'เข้าสู่ระบบ',
+      cancelButtonText: 'ยกเลิก',
+      confirmButtonColor: '#0f172a',
+      preConfirm: () => {
+        const u = document.getElementById('loginUsername').value;
+        const p = document.getElementById('loginPassword').value;
+        if (!u || !p) { Swal.showValidationMessage('กรอกข้อมูลให้ครบถ้วน'); return false; }
+        return { u, p };
+      }
+    }).then((res) => {
+      if (res.isConfirmed) {
+        if (res.value.u === ADMIN_USER && res.value.p === ADMIN_PASS) {
+          sessionStorage.setItem('adminIsLoggedIn', 'true');
+          switchView('viewAdmin');
+        } else {
+          Swal.fire('ข้อผิดพลาด', 'Username หรือ Password ไม่ถูกต้อง', 'error');
+        }
+      }
+    });
+  }
+
+  function logoutAdmin() {
+    sessionStorage.removeItem('adminIsLoggedIn');
+    switchView('viewForm');
   }
 
   function calculateDays() {
@@ -280,9 +291,8 @@
       const d1 = new Date(start);
       const d2 = new Date(end);
       if (d2 < d1) {
-        Swal.fire('คำเตือน', 'วันที่เดินทางกลับต้องไม่อยู่ก่อนวันที่ออกเดินทาง', 'warning');
+        Swal.fire('คำเตือน', 'วันที่เดินทางกลับต้องไม่อยู่ก่อนวันออกเดินทาง', 'warning');
         document.getElementById('endDate').value = start;
-        document.getElementById('durationDays').value = 1;
         return;
       }
       const diffTime = d2 - d1;
@@ -303,10 +313,9 @@
 
   document.getElementById('vehicleRequestForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    
     const btn = document.getElementById('btnSubmit');
     btn.disabled = true;
-    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>กำลังบันทึกข้อมูล...';
+    btn.innerHTML = 'กำลังบันทึก...';
 
     const formData = new FormData(this);
     const data = Object.fromEntries(formData.entries());
@@ -317,55 +326,26 @@
           btn.disabled = false;
           btn.innerHTML = '<i class="bi bi-send-fill me-2"></i> ยื่นคำร้องขอใช้รถยนต์';
           if(res.success) {
-            Swal.fire({
-              icon: 'success',
-              title: 'ยื่นคำร้องสำเร็จ!',
-              text: 'รหัสคำร้องของคุณคือ: ' + res.requestId,
-              confirmButtonColor: '#1e3a8a'
-            });
+            Swal.fire('สำเร็จ!', 'รหัสคำร้อง: ' + res.requestId, 'success');
             document.getElementById('vehicleRequestForm').reset();
-            document.querySelectorAll('.custom-card-option').forEach(el => el.classList.remove('has-checked'));
-            document.getElementById('durationDays').value = '';
-          } else {
-            Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาด', text: res.message });
-          }
-        })
-        .withFailureHandler(function(err) {
-          btn.disabled = false;
-          btn.innerHTML = '<i class="bi bi-send-fill me-2"></i> ยื่นคำร้องขอใช้รถยนต์';
-          Swal.fire({ icon: 'error', title: 'System Error', text: err.toString() });
+          } else { Swal.fire('ผิดพลาด', res.message, 'error'); }
         })
         .submitRequest(data);
     } else {
       data.action = "submitRequest";
       fetch(GAS_WEBAPP_URL, {
-        method: 'POST',
-        mode: 'cors',
+        method: 'POST', mode: 'cors',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(data)
       })
-      .then(response => response.json())
+      .then(res => res.json())
       .then(res => {
         btn.disabled = false;
         btn.innerHTML = '<i class="bi bi-send-fill me-2"></i> ยื่นคำร้องขอใช้รถยนต์';
         if(res.success) {
-          Swal.fire({
-            icon: 'success',
-            title: 'ยื่นคำร้องสำเร็จ!',
-            text: 'รหัสคำร้องของคุณคือ: ' + res.requestId,
-            confirmButtonColor: '#1e3a8a'
-          });
+          Swal.fire('สำเร็จ!', 'รหัสคำร้อง: ' + res.requestId, 'success');
           document.getElementById('vehicleRequestForm').reset();
-          document.querySelectorAll('.custom-card-option').forEach(el => el.classList.remove('has-checked'));
-          document.getElementById('durationDays').value = '';
-        } else {
-          Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาด', text: res.message });
-        }
-      })
-      .catch(err => {
-        btn.disabled = false;
-        btn.innerHTML = '<i class="bi bi-send-fill me-2"></i> ยื่นคำร้องขอใช้รถยนต์';
-        Swal.fire({ icon: 'error', title: 'System Error', text: err.toString() });
+        } else { Swal.fire('ผิดพลาด', res.message, 'error'); }
       });
     }
   });
