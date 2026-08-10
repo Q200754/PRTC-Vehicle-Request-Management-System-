@@ -3,143 +3,143 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>วิทยาลัยเทคโนโลยีพระมหาไถ่ พัทยา | แบบยื่นคำร้องขอใช้รถ</title>
+  <title>วิทยาลัยเทคโนโลยีพระมหาไถ่ พัทยา | ยื่นคำร้องขอใช้รถ</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <style>
+    :root {
+      --primary-color: #1e3a8a;
+      --primary-hover: #1e40af;
+      --bg-color: #f8fafc;
+      --card-border: #e2e8f0;
+    }
     body {
       font-family: 'Sarabun', sans-serif;
-      background-color: #eef2f6;
-      color: #2b2b2b;
+      background-color: var(--bg-color);
+      color: #334155;
     }
     .form-container {
-      max-width: 850px;
+      max-width: 880px;
       margin: 30px auto;
       background: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
       padding: 40px;
-      border-top: 6px solid #1a568c;
-      position: relative;
+      border-top: 6px solid var(--primary-color);
     }
     .form-header {
       text-align: center;
       margin-bottom: 30px;
-      border-bottom: 2px solid #eef2f6;
+      border-bottom: 2px solid #f1f5f9;
       padding-bottom: 20px;
     }
     .form-header h4 {
       font-weight: 700;
-      color: #1a568c;
-      margin-bottom: 5px;
-    }
-    .form-header h5 {
-      font-weight: 600;
-      color: #4a5568;
-    }
-    .btn-admin-group {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-    }
-    .section-num {
-      font-weight: 600;
-      color: #1a568c;
-    }
-    .form-label {
-      font-weight: 500;
+      color: var(--primary-color);
       margin-bottom: 6px;
     }
-    .radio-group-box {
-      background-color: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      padding: 12px 16px;
+    .nav-btn-group .btn {
+      border-radius: 20px;
+      font-weight: 600;
+      padding: 6px 16px;
+      transition: all 0.2s ease;
     }
-    .form-check-input:checked {
-      background-color: #1a568c;
-      border-color: #1a568c;
+    .section-title {
+      font-weight: 700;
+      color: #0f172a;
+      font-size: 1.05rem;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .custom-card-option {
+      border: 2px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background-color: #ffffff;
+    }
+    .custom-card-option:hover {
+      border-color: #93c5fd;
+      background-color: #f0f9ff;
+    }
+    .form-check-input:checked + .custom-card-label {
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+    .has-checked {
+      border-color: var(--primary-color) !important;
+      background-color: #eff6ff !important;
     }
     .btn-submit {
-      background-color: #1a568c;
+      background-color: var(--primary-color);
       border: none;
-      font-weight: 600;
+      font-weight: 700;
       font-size: 1.1rem;
-      border-radius: 8px;
-      padding: 12px;
+      border-radius: 10px;
+      padding: 14px;
       transition: all 0.2s ease;
     }
     .btn-submit:hover {
-      background-color: #13416c;
+      background-color: var(--primary-hover);
     }
     @media (max-width: 576px) {
-      .btn-admin-group {
-        position: static;
-        display: flex;
-        width: 100%;
-        margin-bottom: 15px;
-        justify-content: flex-end;
-      }
-      .form-container {
-        padding: 20px;
-        margin: 15px auto;
-      }
+      .form-container { padding: 24px 18px; margin: 15px auto; }
     }
   </style>
 </head>
 <body>
 
-<div class="container">
+<div class="container py-2">
   <div class="form-container">
     
-    <!-- ปุ่มสลับไปหน้า Driver และ Admin บน Google Apps Script -->
-    <div class="d-flex gap-2 btn-admin-group">
-      <a href="https://script.google.com/macros/s/AKfycbwszE9zY8keM6n0YL-yXRKpfurNfxwxPGClM98Y7C8xiIQQQXppF605e54l2XEUDYLq/exec?p=driver" 
-         target="_self" 
-         class="btn btn-outline-success btn-sm rounded-pill fw-bold">
-        <i class="bi bi-card-checklist me-1"></i> สำหรับคนขับ
+    <!-- Navigation Buttons -->
+    <div class="d-flex justify-content-end gap-2 nav-btn-group mb-3">
+      <a href="?p=driver" target="_self" class="btn btn-outline-success btn-sm">
+        <i class="bi bi-speedometer2 me-1"></i> สำหรับคนขับ
       </a>
-      <a href="https://script.google.com/macros/s/AKfycbwszE9zY8keM6n0YL-yXRKpfurNfxwxPGClM98Y7C8xiIQQQXppF605e54l2XEUDYLq/exec?p=admin" 
-         target="_self" 
-         class="btn btn-outline-secondary btn-sm rounded-pill fw-bold">
+      <a href="?p=admin" target="_self" class="btn btn-outline-secondary btn-sm">
         <i class="bi bi-shield-lock-fill me-1"></i> ระบบแอดมิน
       </a>
     </div>
 
-    <!-- หัวข้อเอกสาร -->
-    <div class="form-header mt-3 mt-sm-0">
+    <!-- Header Title -->
+    <div class="form-header">
       <h4>วิทยาลัยเทคโนโลยีพระมหาไถ่ พัทยา</h4>
-      <h5>แบบยื่นคำร้องขอใช้รถ</h5>
+      <h5 class="text-muted fw-normal fs-6">แบบยื่นคำร้องขอใช้รถยนต์สถาบัน</h5>
     </div>
 
     <form id="vehicleRequestForm">
       
-      <!-- ๑. ผู้ขอใช้ และ ฝ่าย -->
-      <div class="row g-3 mb-3">
-        <div class="col-md-7">
-          <label class="form-label"><span class="section-num">๑. ผู้ขอใช้ (ชื่อ-นามสกุล)</span> <span class="text-danger">*</span></label>
-          <input type="text" class="form-control" name="fullname" required placeholder="ระบุชื่อ-นามสกุล">
-        </div>
-        <div class="col-md-5">
-          <label class="form-label"><span class="section-num">ฝ่าย</span> <span class="text-danger">*</span></label>
-          <input type="text" class="form-control" name="department" required placeholder="ระบุฝ่าย / แผนก">
+      <!-- 1. ข้อมูลผู้ขอใช้ -->
+      <div class="mb-4">
+        <div class="section-title"><i class="bi bi-person-circle text-primary"></i> ๑. ข้อมูลผู้ยื่นคำร้อง</div>
+        <div class="row g-3">
+          <div class="col-md-7">
+            <label class="form-label small fw-bold">ชื่อ-นามสกุล ผู้ขอใช้ <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" name="fullname" required placeholder="ระบุชื่อ-นามสกุล">
+          </div>
+          <div class="col-md-5">
+            <label class="form-label small fw-bold">ฝ่าย / แผนก <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" name="department" required placeholder="เช่น เทคโนโลยีสารสนเทศ">
+          </div>
+          <div class="col-12">
+            <label class="form-label small fw-bold">วัตถุประสงค์การใช้งาน <span class="text-danger">*</span></label>
+            <textarea class="form-control" name="objective" rows="2" required placeholder="ระบุรายละเอียดวัตถุประสงค์การเดินทาง"></textarea>
+          </div>
         </div>
       </div>
 
-      <!-- ๒. เพื่อ (วัตถุประสงค์) -->
-      <div class="mb-3">
-        <label class="form-label"><span class="section-num">๒. เพื่อ</span> <span class="text-danger">*</span></label>
-        <textarea class="form-control" name="objective" rows="2" required placeholder="ระบุวัตถุประสงค์ในการขอใช้รถ"></textarea>
-      </div>
-
-      <!-- ๓. กำหนดการเดินทาง -->
-      <div class="mb-3">
-        <label class="form-label"><span class="section-num">๓. กำหนดการเดินทาง</span></label>
+      <!-- 2. กำหนดการเดินทาง -->
+      <div class="mb-4">
+        <div class="section-title"><i class="bi bi-calendar-event text-primary"></i> ๒. กำหนดการเดินทาง</div>
         <div class="row g-3">
           <div class="col-md-6">
-            <div class="p-3 border rounded bg-light">
-              <span class="fw-bold text-secondary d-block mb-2">ออกเดินทาง</span>
+            <div class="p-3 border rounded-3 bg-light">
+              <span class="fw-bold text-dark d-block mb-2 small"><i class="bi bi-box-arrow-up-right me-1 text-primary"></i> ออกเดินทาง</span>
               <div class="row g-2">
                 <div class="col-7">
                   <label class="small text-muted">วันที่</label>
@@ -154,8 +154,8 @@
           </div>
 
           <div class="col-md-6">
-            <div class="p-3 border rounded bg-light">
-              <span class="fw-bold text-secondary d-block mb-2">เดินทางกลับ</span>
+            <div class="p-3 border rounded-3 bg-light">
+              <span class="fw-bold text-dark d-block mb-2 small"><i class="bi bi-box-arrow-in-down-left me-1 text-success"></i> เดินทางกลับ</span>
               <div class="row g-2">
                 <div class="col-7">
                   <label class="small text-muted">วันที่</label>
@@ -169,91 +169,90 @@
             </div>
           </div>
 
-          <div class="col-12 mt-2">
+          <div class="col-12">
             <div class="input-group">
-              <span class="input-group-text bg-white fw-bold">รวมระยะเวลาเดินทาง</span>
-              <input type="number" class="form-control" name="durationDays" id="durationDays" placeholder="0" readonly>
-              <span class="input-group-text bg-white">วัน</span>
+              <span class="input-group-text bg-white fw-bold text-secondary">รวมระยะเวลาเดินทาง</span>
+              <input type="number" class="form-control text-center fw-bold text-primary fs-5" name="durationDays" id="durationDays" placeholder="0" readonly>
+              <span class="input-group-text bg-white fw-bold text-secondary">วัน</span>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- ๔. การรับ-ส่ง -->
-      <div class="mb-3">
-        <label class="form-label"><span class="section-num">๔. การรับ-ส่ง</span> <span class="text-danger">*</span></label>
-        <div class="radio-group-box">
-          <div class="form-check form-check-inline me-4">
-            <input class="form-check-input" type="radio" name="tripType" id="trip1" value="ไปส่งเท่านั้น" required>
-            <label class="form-check-label" for="trip1">ไปส่งเท่านั้น</label>
-          </div>
-          <div class="form-check form-check-inline me-4">
-            <input class="form-check-input" type="radio" name="tripType" id="trip2" value="รับกลับเท่านั้น">
-            <label class="form-check-label" for="trip2">รับกลับเท่านั้น</label>
-          </div>
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="tripType" id="trip3" value="ไปส่งและรอรับกลับ">
-            <label class="form-check-label" for="trip3">ไปส่งและรอรับกลับ</label>
-          </div>
-        </div>
-      </div>
-
-      <!-- ๕. จำนวนผู้ร่วมเดินทาง -->
-      <div class="mb-3">
-        <label class="form-label"><span class="section-num">๕. จำนวนผู้ร่วมเดินทาง</span> <span class="text-danger">*</span></label>
-        <div class="input-group" style="max-width: 300px;">
-          <input type="number" class="form-control" name="passengerCount" min="1" value="1" required>
-          <span class="input-group-text bg-white">คน</span>
-        </div>
-      </div>
-
-      <!-- ๖. รถที่ต้องการใช้ -->
-      <div class="mb-3">
-        <label class="form-label"><span class="section-num">๖. รถที่ต้องการใช้</span> <span class="text-danger">*</span></label>
-        <div class="radio-group-box">
-          <div class="form-check form-check-inline me-4">
-            <input class="form-check-input" type="radio" name="vehicleType" id="v1" value="รถตู้" required>
-            <label class="form-check-label" for="v1">รถตู้</label>
-          </div>
-          <div class="form-check form-check-inline me-4">
-            <input class="form-check-input" type="radio" name="vehicleType" id="v2" value="รถกระบะ">
-            <label class="form-check-label" for="v2">รถกระบะ</label>
-          </div>
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="vehicleType" id="v3" value="รถบัส">
-            <label class="form-check-label" for="v3">รถบัส</label>
-          </div>
-        </div>
-      </div>
-
-      <!-- ๗. ผู้รับผิดชอบในการขับรถ -->
-      <div class="mb-3">
-        <label class="form-label"><span class="section-num">๗. ผู้รับผิดชอบในการขับรถ</span> <small class="text-muted">(ถ้ามีระบุ)</small></label>
-        <input type="text" class="form-control" name="driverName" placeholder="ระบุชื่อผู้ขับรถ (หรือเว้นไว้ให้แอดมินจัดสรร)">
-      </div>
-
-      <!-- ๘. กิจกรรมขอใช้รถ -->
+      <!-- 3. รายละเอียดการรับส่ง & ผู้ร่วมเดินทาง -->
       <div class="mb-4">
-        <label class="form-label"><span class="section-num">๘. กิจกรรมขอใช้รถ</span> <span class="text-danger">*</span></label>
-        <div class="radio-group-box">
-          <div class="form-check form-check-inline me-4">
-            <input class="form-check-input" type="radio" name="activity" id="act1" value="งานส่วนตัว" required>
-            <label class="form-check-label" for="act1">งานส่วนตัว</label>
+        <div class="section-title"><i class="bi bi-geo-alt text-primary"></i> ๓. การรับ-ส่ง และ จำนวนผู้ร่วมเดินทาง</div>
+        <div class="row g-3">
+          <div class="col-md-8">
+            <label class="form-label small fw-bold">ลักษณะการรับ-ส่ง <span class="text-danger">*</span></label>
+            <div class="d-flex flex-wrap gap-2">
+              <label class="custom-card-option flex-fill">
+                <input class="form-check-input me-1" type="radio" name="tripType" value="ไปส่งเท่านั้น" required onchange="updateRadioHighlight(this)">
+                <span class="custom-card-label small">ไปส่งเท่านั้น</span>
+              </label>
+              <label class="custom-card-option flex-fill">
+                <input class="form-check-input me-1" type="radio" name="tripType" value="รับกลับเท่านั้น" onchange="updateRadioHighlight(this)">
+                <span class="custom-card-label small">รับกลับเท่านั้น</span>
+              </label>
+              <label class="custom-card-option flex-fill">
+                <input class="form-check-input me-1" type="radio" name="tripType" value="ไปส่งและรอรับกลับ" onchange="updateRadioHighlight(this)">
+                <span class="custom-card-label small">รอรับกลับ</span>
+              </label>
+            </div>
           </div>
-          <div class="form-check form-check-inline me-4">
-            <input class="form-check-input" type="radio" name="activity" id="act2" value="งานโรงเรียน">
-            <label class="form-check-label" for="act2">งานโรงเรียน</label>
-          </div>
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="activity" id="act3" value="งานกิจกรรมอื่น ๆ">
-            <label class="form-check-label" for="act3">งานกิจกรรมอื่น ๆ</label>
+
+          <div class="col-md-4">
+            <label class="form-label small fw-bold">ผู้ร่วมเดินทาง <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <input type="number" class="form-control" name="passengerCount" min="1" value="1" required>
+              <span class="input-group-text bg-white">คน</span>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- ปุ่มส่งข้อมูล -->
-      <button type="submit" id="btnSubmit" class="btn btn-primary btn-submit w-100 shadow-sm">
-        ยื่นคำร้องขอใช้รถ
+      <!-- 4. ตัวเลือกรถ & ผู้ขับ -->
+      <div class="mb-4">
+        <div class="section-title"><i class="bi bi-truck text-primary"></i> ๔. ยานพาหนะ และ กิจกรรม</div>
+        <div class="row g-3">
+          <div class="col-md-12">
+            <label class="form-label small fw-bold">ประเภทรถที่ต้องการใช้ <span class="text-danger">*</span></label>
+            <div class="d-flex flex-wrap gap-2">
+              <label class="custom-card-option flex-fill text-center">
+                <input class="form-check-input me-1" type="radio" name="vehicleType" value="รถตู้" required onchange="updateRadioHighlight(this)">
+                <span class="custom-card-label"><i class="bi bi-bus-front me-1"></i> รถตู้</span>
+              </label>
+              <label class="custom-card-option flex-fill text-center">
+                <input class="form-check-input me-1" type="radio" name="vehicleType" value="รถกระบะ" onchange="updateRadioHighlight(this)">
+                <span class="custom-card-label"><i class="bi bi-truck me-1"></i> รถกระบะ</span>
+              </label>
+              <label class="custom-card-option flex-fill text-center">
+                <input class="form-check-input me-1" type="radio" name="vehicleType" value="รถบัส" onchange="updateRadioHighlight(this)">
+                <span class="custom-card-label"><i class="bi bi-terminal me-1"></i> รถบัส</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label small fw-bold">ผู้รับผิดชอบในการขับรถ <small class="text-muted">(ถ้ามีระบุ)</small></label>
+            <input type="text" class="form-control" name="driverName" placeholder="ระบุชื่อผู้ขับรถ">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label small fw-bold">ประเภทกิจกรรม <span class="text-danger">*</span></label>
+            <select class="form-select" name="activity" required>
+              <option value="" selected disabled>-- เลือกกิจกรรม --</option>
+              <option value="งานโรงเรียน">งานโรงเรียน</option>
+              <option value="งานกิจกรรมอื่น ๆ">งานกิจกรรมอื่น ๆ</option>
+              <option value="งานส่วนตัว">งานส่วนตัว</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" id="btnSubmit" class="btn btn-primary btn-submit w-100 shadow-sm mt-3">
+        <i class="bi bi-send-fill me-2"></i> ยื่นคำร้องขอใช้รถยนต์
       </button>
 
     </form>
@@ -270,9 +269,25 @@
     if (start && end) {
       const d1 = new Date(start);
       const d2 = new Date(end);
+      if (d2 < d1) {
+        Swal.fire('คำเตือน', 'วันที่เดินทางกลับต้องไม่อยู่ก่อนวันที่ออกเดินทาง', 'warning');
+        document.getElementById('endDate').value = start;
+        document.getElementById('durationDays').value = 1;
+        return;
+      }
       const diffTime = d2 - d1;
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
       document.getElementById('durationDays').value = diffDays > 0 ? diffDays : 1;
+    }
+  }
+
+  function updateRadioHighlight(element) {
+    const name = element.name;
+    document.querySelectorAll(`input[name="${name}"]`).forEach(input => {
+      input.closest('.custom-card-option')?.classList.remove('has-checked');
+    });
+    if (element.checked) {
+      element.closest('.custom-card-option')?.classList.add('has-checked');
     }
   }
 
@@ -281,7 +296,7 @@
     
     const btn = document.getElementById('btnSubmit');
     btn.disabled = true;
-    btn.innerText = 'กำลังบันทึกข้อมูล...';
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>กำลังบันทึกข้อมูล...';
 
     const formData = new FormData(this);
     const data = Object.fromEntries(formData.entries());
@@ -290,15 +305,16 @@
       google.script.run
         .withSuccessHandler(function(res) {
           btn.disabled = false;
-          btn.innerText = 'ยื่นคำร้องขอใช้รถ';
+          btn.innerHTML = '<i class="bi bi-send-fill me-2"></i> ยื่นคำร้องขอใช้รถยนต์';
           if(res.success) {
             Swal.fire({
               icon: 'success',
               title: 'ยื่นคำร้องสำเร็จ!',
               text: 'รหัสคำร้องของคุณคือ: ' + res.requestId,
-              confirmButtonColor: '#1a568c'
+              confirmButtonColor: '#1e3a8a'
             });
             document.getElementById('vehicleRequestForm').reset();
+            document.querySelectorAll('.custom-card-option').forEach(el => el.classList.remove('has-checked'));
             document.getElementById('durationDays').value = '';
           } else {
             Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาด', text: res.message });
@@ -306,7 +322,7 @@
         })
         .withFailureHandler(function(err) {
           btn.disabled = false;
-          btn.innerText = 'ยื่นคำร้องขอใช้รถ';
+          btn.innerHTML = '<i class="bi bi-send-fill me-2"></i> ยื่นคำร้องขอใช้รถยนต์';
           Swal.fire({ icon: 'error', title: 'System Error', text: err.toString() });
         })
         .submitRequest(data);
@@ -321,15 +337,16 @@
       .then(response => response.json())
       .then(res => {
         btn.disabled = false;
-        btn.innerText = 'ยื่นคำร้องขอใช้รถ';
+        btn.innerHTML = '<i class="bi bi-send-fill me-2"></i> ยื่นคำร้องขอใช้รถยนต์';
         if(res.success) {
           Swal.fire({
             icon: 'success',
             title: 'ยื่นคำร้องสำเร็จ!',
             text: 'รหัสคำร้องของคุณคือ: ' + res.requestId,
-            confirmButtonColor: '#1a568c'
+            confirmButtonColor: '#1e3a8a'
           });
           document.getElementById('vehicleRequestForm').reset();
+          document.querySelectorAll('.custom-card-option').forEach(el => el.classList.remove('has-checked'));
           document.getElementById('durationDays').value = '';
         } else {
           Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาด', text: res.message });
@@ -337,7 +354,7 @@
       })
       .catch(err => {
         btn.disabled = false;
-        btn.innerText = 'ยื่นคำร้องขอใช้รถ';
+        btn.innerHTML = '<i class="bi bi-send-fill me-2"></i> ยื่นคำร้องขอใช้รถยนต์';
         Swal.fire({ icon: 'error', title: 'System Error', text: err.toString() });
       });
     }
