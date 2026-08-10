@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PRTC-VRMS | บันทึกงานขับรถ</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <style>
+    body { font-family: 'Sarabun', sans-serif; background-color: #f4f6f9; }
+    .card-custom { border: none; border-top: 5px solid #198754; border-radius: 12px; }
+  </style>
+</head>
+<body>
+
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      
+      <div class="mb-3 d-flex gap-2">
+        <a href="https://script.google.com/macros/s/AKfycbwszE9zY8keM6n0YL-yXRKpfurNfxwxPGClM98Y7C8xiIQQQXppF605e54l2XEUDYLq/exec" 
+           target="_self" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+          <i class="bi bi-arrow-left me-1"></i> ย้อนกลับหน้าหลัก
+        </a>
+        <a href="https://script.google.com/macros/s/AKfycbwszE9zY8keM6n0YL-yXRKpfurNfxwxPGClM98Y7C8xiIQQQXppF605e54l2XEUDYLq/exec?p=admin" 
+           target="_self" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+          <i class="bi bi-shield-lock-fill me-1"></i> ระบบแอดมิน
+        </a>
+      </div>
+
+      <div class="card card-custom p-4 bg-white shadow-sm">
+        <h4 class="text-success mb-3"><i class="bi bi-speedometer2 me-2"></i>บันทึกระยะทางและค่าน้ำมัน (สำหรับคนขับ)</h4>
+        
+        <div class="mb-3">
+          <label class="form-label fw-bold">เลือกรายการงานที่อนุมัติแล้ว</label>
+          <select class="form-select" id="requestSelect" onchange="onSelectRequest()">
+            <option value="" selected disabled>-- กำลังโหลดรายการ... --</option>
+          </select>
+        </div>
+
+        <form id="driverForm" style="display:none;">
+          <input type="hidden" id="rowIndex">
+          
+          <div class="p-3 bg-light rounded mb-3">
+            <div><strong>งาน:</strong> <span id="infoObjective"></span></div>
+            <div><strong>ผู้ขอใช้รถ:</strong> <span id="infoUser"></span></div>
+            <div><strong>รถ:</strong> <span id="infoVehicle"></span></div>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label">เลขไมล์เริ่มต้น (กม.) <span class="text-danger">*</span></label>
+              <input type="number" class="form-control" id="startMile" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">เลขไมล์สิ้นสุด (กม.) <span class="text-danger">*</span></label>
+              <input type="number" class="form-control" id="endMile" required>
+            </div>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label">ประเภทน้ำมันที่เติม</label>
+              <input type="text" class="form-control" id="fuelType" placeholder="เช่น ดีเซล / เบนซิน 95">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">จำนวนเงินค่าน้ำมัน (บาท)</label>
+              <input type="number" class="form-control" id="fuelAmount" value="0">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">บันทึกข้อเสนอแนะ / ปัญหาจากการใช้งานรถ</label>
+            <textarea class="form-control" id="driverNote" rows="2" placeholder="เช่น สภาพรถปกติ, มีเสียงดังที่เบรก"></textarea>
+          </div>
+
+          <button type="submit" id="btnSave" class="btn btn-success w-100 py-2 fw-bold">บันทึกปิดงานการเดินทาง</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  let activeRequests = [];
+
+  window.onload = function() {
+    google.script.run
+      .withSuccessHandler(populateSelect)
+      .getRequests();
+  };
+
+  function populateSelect(requests) {
+    const select = document.getElementById('requestSelect');
+    activeRequests = (requests || []).filter(r => r.status === 'อนุมัติ');
+
+    if(activeRequests.length === 0) {
+      select.innerHTML = '<option value="" disabled>ไม่มีงานที่รอการบันทึกในขณะนี้</option>';
+      return;
+    }
+
+    let html = '<option value="" selected disabled>-- เลือกรายการงานคำร้อง --</option>';
+    activeRequests.forEach((r, idx) => {
+      html += `<option value="${idx}">${r.requestId} - ${r.fullname} (${r.startDate})</option>`;
+    });
+    select.innerHTML = html;
+  }
+
+  function onSelectRequest() {
+    const idx = document.getElementById('requestSelect').value;
+    const req = activeRequests[idx];
+    
+    if(!req) return;
+
+    document.getElementById('rowIndex').value = req.rowIndex;
+    document.getElementById('infoObjective').innerText = req.objective;
+    document.getElementById('infoUser').innerText = req.fullname + ' (' + req.department + ')';
+    document.getElementById('infoVehicle').innerText = req.vehicleType;
+    
+    document.getElementById('startMile').value = req.startMile || '';
+    document.getElementById('endMile').value = req.endMile || '';
+    
+    document.getElementById('driverForm').style.display = 'block';
+  }
+
+  document.getElementById('driverForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const data = {
+      rowIndex: document.getElementById('rowIndex').value,
+      startMile: document.getElementById('startMile').value,
+      endMile: document.getElementById('endMile').value,
+      fuelType: document.getElementById('fuelType').value,
+      fuelAmount: document.getElementById('fuelAmount').value,
+      driverNote: document.getElementById('driverNote').value
+    };
+
+    if(Number(data.endMile) <= Number(data.startMile)) {
+      Swal.fire('คำเตือน', 'เลขไมล์สิ้นสุดต้องมากกว่าเลขไมล์เริ่มต้น', 'warning');
+      return;
+    }
+
+    document.getElementById('btnSave').disabled = true;
+
+    google.script.run
+      .withSuccessHandler(function(res) {
+        document.getElementById('btnSave').disabled = false;
+        if(res.success) {
+          Swal.fire('สำเร็จ', 'บันทึกข้อมูลการเดินทางเรียบร้อยแล้ว', 'success');
+          document.getElementById('driverForm').reset();
+          document.getElementById('driverForm').style.display = 'none';
+          google.script.run.withSuccessHandler(populateSelect).getRequests();
+        } else {
+          Swal.fire('ผิดพลาด', res.message, 'error');
+        }
+      })
+      .updateDriverLog(data);
+  });
+</script>
+</body>
+</html>
