@@ -290,3 +290,32 @@ function doPost(e) {
       .setMimeType(ContentService.MimeType.JSON);
   }
 }
+
+function testPushLineDirect() {
+  const token = LINE_CHANNEL_TOKEN;
+  const targetId = LINE_TARGET_ID;
+  
+  const payload = {
+    "to": targetId,
+    "messages": [
+      {
+        "type": "text",
+        "text": "🔔 ทดสอบแจ้งเตือน LINE จาก PRTC-VRMS"
+      }
+    ]
+  };
+  
+  const options = {
+    "method": "post",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    },
+    "payload": JSON.stringify(payload),
+    "muteHttpExceptions": true
+  };
+  
+  const response = UrlFetchApp.fetch("https://api.line.me/v2/bot/message/push", options);
+  Logger.log("HTTP Code: " + response.getResponseCode());
+  Logger.log("Response Message: " + response.getContentText());
+}
