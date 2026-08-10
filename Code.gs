@@ -254,13 +254,31 @@ function deleteRequest(rowIndex) {
 }
 
 // 9. รองรับ HTTP POST จาก Vercel
+// รองรับ HTTP POST จาก Vercel/Client
 function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
     let result = { success: false, message: 'Invalid action' };
     
+    // 1. ยื่นคำร้องขอใช้รถ
     if (data.action === 'submitRequest') {
       result = submitRequest(data);
+    } 
+    // 2. อนุมัติ / ไม่อนุมัติ
+    else if (data.action === 'updateAdminApproval') {
+      result = updateAdminApproval(data.rowIndex, data.status, data.driverName, data.adminName);
+    } 
+    // 3. บันทึกแก้ไขข้อมูลคำร้อง
+    else if (data.action === 'updateRequestDetail') {
+      result = updateRequestDetail(data.data);
+    } 
+    // 4. ลบคำร้อง
+    else if (data.action === 'deleteRequest') {
+      result = deleteRequest(data.rowIndex);
+    }
+    // 5. คนขับบันทึกระยะทาง/ค่าน้ำมัน
+    else if (data.action === 'updateDriverLog') {
+      result = updateDriverLog(data.data);
     }
     
     return ContentService
