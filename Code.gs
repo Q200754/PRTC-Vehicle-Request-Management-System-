@@ -19,7 +19,6 @@ function getTargetSheet() {
 
 // 1. ฟังก์ชัน doGet สำหรับแสดงหน้าเว็บและส่งข้อมูลผ่าน API
 function doGet(e) {
-  // รองรับการดึงข้อมูลตารางผ่าน fetch (สำหรับ Vercel / Client)
   if (e && e.parameter && e.parameter.action === 'getRequests') {
     const data = getRequests();
     return ContentService
@@ -27,7 +26,6 @@ function doGet(e) {
       .setMimeType(ContentService.MimeType.JSON);
   }
 
-  // รองรับการเปิดหน้าปกติใน Apps Script
   const page = e && e.parameter.p ? e.parameter.p.toLowerCase() : 'index';
   let htmlName = 'index';
   
@@ -210,12 +208,22 @@ function sendApprovalLineMessagingApi(requestId, fullname, department, objective
     }
   };
 
-  UrlFetchApp.fetch('https://api.line.me/v2/bot/message/push', {
+  const linePayload = {
+    "to": LINE_TARGET_ID,
+    "messages": [flexMessageJson]
+  };
+
+  const options = {
     'method': 'post',
-    'headers': { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + LINE_CHANNEL_TOKEN },
-    'payload': JSON.stringify(flexMessageJson),
+    'headers': { 
+      'Content-Type': 'application/json', 
+      'Authorization': 'Bearer ' + LINE_CHANNEL_TOKEN 
+    },
+    'payload': JSON.stringify(linePayload),
     'muteHttpExceptions': true
-  });
+  };
+
+  UrlFetchApp.fetch('https://api.line.me/v2/bot/message/push', options);
 }
 
 // 7. บันทึกงานคนขับ
@@ -253,31 +261,21 @@ function deleteRequest(rowIndex) {
   }
 }
 
-// 9. รองรับ HTTP POST จาก Vercel
-// รองรับ HTTP POST จาก Vercel/Client
+// 9. รองรับ HTTP POST จาก Vercel/Client
 function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
     let result = { success: false, message: 'Invalid action' };
     
-    // 1. ยื่นคำร้องขอใช้รถ
     if (data.action === 'submitRequest') {
       result = submitRequest(data);
-    } 
-    // 2. อนุมัติ / ไม่อนุมัติ
-    else if (data.action === 'updateAdminApproval') {
+    } else if (data.action === 'updateAdminApproval') {
       result = updateAdminApproval(data.rowIndex, data.status, data.driverName, data.adminName);
-    } 
-    // 3. บันทึกแก้ไขข้อมูลคำร้อง
-    else if (data.action === 'updateRequestDetail') {
+    } else if (data.action === 'updateRequestDetail') {
       result = updateRequestDetail(data.data);
-    } 
-    // 4. ลบคำร้อง
-    else if (data.action === 'deleteRequest') {
+    } else if (data.action === 'deleteRequest') {
       result = deleteRequest(data.rowIndex);
-    }
-    // 5. คนขับบันทึกระยะทาง/ค่าน้ำมัน
-    else if (data.action === 'updateDriverLog') {
+    } else if (data.action === 'updateDriverLog') {
       result = updateDriverLog(data.data);
     }
     
@@ -291,6 +289,7 @@ function doPost(e) {
   }
 }
 
+// 10. ฟังก์ชันทดสอบส่ง LINE โดยตรง
 function testPushLineDirect() {
   const token = LINE_CHANNEL_TOKEN;
   const targetId = LINE_TARGET_ID;
