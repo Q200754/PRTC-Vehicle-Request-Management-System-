@@ -20,13 +20,24 @@ function getTargetSheet() {
 }
 
 function doGet(e) {
-  // รองรับการเรียกข้อมูลดึงรายการคำร้องผ่าน fetch (สำหรับ Vercel)
   if (e && e.parameter && e.parameter.action === 'getRequests') {
     const data = getRequests();
     return ContentService
       .createTextOutput(JSON.stringify(data))
       .setMimeType(ContentService.MimeType.JSON);
   }
+
+  const page = e && e.parameter.p ? e.parameter.p.toLowerCase() : 'form';
+  let htmlName = 'Form';
+  if (page === 'admin') htmlName = 'Admin';
+  else if (page === 'driver') htmlName = 'Driver';
+
+  return HtmlService.createTemplateFromFile(htmlName)
+    .evaluate()
+    .setTitle('PRTC-VRMS | ' + htmlName)
+    .addMetaTag('viewport', 'width=device-width, initial-scale=1')
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+}
 
   // การเปิดหน้าเว็บปกติบน Google Apps Script
   const page = e && e.parameter.p ? e.parameter.p.toLowerCase() : 'form';
